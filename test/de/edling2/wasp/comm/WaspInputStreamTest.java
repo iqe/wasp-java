@@ -4,6 +4,7 @@ import static de.edling2.wasp.comm.WaspMessage.*;
 import static org.junit.Assert.*;
 
 import java.io.EOFException;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,11 +13,13 @@ public class WaspInputStreamTest {
 
 	private TestInputStream inputStream;
 	private WaspInputStream stream;
+	private byte[] buffer;
 
 	@Before
 	public void setUp() {
 		inputStream = new TestInputStream();
 		stream = new WaspInputStream(inputStream);
+		buffer = new byte[1024];
 	}
 
 	@Test
@@ -76,9 +79,16 @@ public class WaspInputStreamTest {
 	}
 
 	@Test
-	public void shouldThrowMessageSizeException() throws Exception {
+	public void shouldThrowCrcMissingException() throws Exception {
 		addInput(SFLAG, 'x', EFLAG);
 		expectException(new CrcMissingException());
+	}
+
+	@Test
+	public void shouldThrowBufferSizeException() throws Exception {
+		addInput(SFLAG, 'A', 'B', 'C', 0x08, 0xF5, EFLAG);
+		useBuffer(new byte[4]);
+		expectException(new BufferSizeException(4));
 	}
 
 	private void expectMessage(String s) throws Exception {
@@ -86,7 +96,8 @@ public class WaspInputStreamTest {
 	}
 
 	private void expectMessage(byte... bytes) throws Exception {
-		byte[] output = stream.readMessage().getBytes();
+		int byteCount = stream.readMessageIntoBuffer(buffer);
+		byte[] output = Arrays.copyOf(buffer, byteCount);
 
 		assertEquals(new String(bytes), new String(output));
 	}
@@ -97,7 +108,7 @@ public class WaspInputStreamTest {
 
 	private void expectException(Exception expected) throws Exception {
 		try {
-			stream.readMessage();
+			stream.readMessageIntoBuffer(buffer);
 			fail("Expected exception '" + expected + "' not thrown");
 		} catch (Exception e) {
 			assertEquals(expected.getClass(), e.getClass());
@@ -113,5 +124,9 @@ public class WaspInputStreamTest {
 
 	private void clearInput() {
 		inputStream.clear();
+	}
+
+	private void useBuffer(byte[] buffer) {
+		this.buffer = buffer;
 	}
 }

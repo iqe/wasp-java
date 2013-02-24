@@ -32,7 +32,7 @@ public class WaspOutputStreamTest {
 	}
 
 	private void writeMessage(String s) throws Exception {
-		stream.writeMessage(new WaspMessage(s.getBytes()));
+		stream.writeMessage(s.getBytes());
 	}
 
 	private void writeMessage(int... bytes) throws Exception {
@@ -40,7 +40,7 @@ public class WaspOutputStreamTest {
 		for (int i = 0; i < bytes.length; i++) {
 			b[i] = (byte) bytes[i];
 		}
-		stream.writeMessage(new WaspMessage(b));
+		stream.writeMessage(b);
 	}
 
 	private void expectMessage(int... bytes) throws Exception {

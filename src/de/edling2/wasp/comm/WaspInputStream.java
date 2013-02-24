@@ -2,7 +2,6 @@ package de.edling2.wasp.comm;
 
 import static de.edling2.wasp.comm.WaspMessage.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,26 +25,31 @@ public class WaspInputStream {
 		}
 	}
 
-	public WaspMessage readMessage() throws IOException {
-		int b;
+	public byte[] readMessage() throws IOException {
+		byte[] buffer = new byte[1024];
+		int byteCount = readMessageIntoBuffer(buffer);
+
+		return Arrays.copyOf(buffer, byteCount);
+	}
+
+	public int readMessageIntoBuffer(byte[] buffer) throws IOException {
+		int b, byteCount = 0;
 		boolean inMessage = false, afterEsc = false;
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
 		while ((b = in.read()) != -1) {
+			checkBufferSize(buffer, byteCount);
 
 			switch(b) {
 			case SFLAG:
 				inMessage = true;
-				buffer = new ByteArrayOutputStream();
+				byteCount = 0;
 				break;
 			case EFLAG:
 				if (inMessage) {
-					byte[] message = buffer.toByteArray();
+					checkLength(byteCount);
+					checkCrc(buffer, byteCount);
 
-					checkLength(message);
-					checkCrc(message);
-
-					return new WaspMessage(Arrays.copyOfRange(message, 0, message.length - 2));
+					return byteCount - 2;
 				}
 				inMessage = false;
 				break;
@@ -58,7 +62,7 @@ public class WaspInputStream {
 						b ^= ESC_XOR;
 						afterEsc = false;
 					}
-					buffer.write(b);
+					buffer[byteCount++] = (byte)b;
 				}
 			}
 		}
@@ -66,18 +70,24 @@ public class WaspInputStream {
 		throw new EOFException("End of stream");
 	}
 
-	private void checkLength(byte[] message) throws IOException {
-		if (message.length < 2) {
+	private void checkBufferSize(byte[] buffer, int byteCount) throws IOException {
+		if (buffer.length <= byteCount) {
+			throw new BufferSizeException(buffer.length);
+		}
+	}
+
+	private void checkLength(int length) throws IOException {
+		if (length < 2) {
 			throw new CrcMissingException();
 		}
 	}
 
-	private void checkCrc(byte[] message) throws IOException {
+	private void checkCrc(byte[] buffer, int byteCount) throws IOException {
 		crc.reset();
-		crc.update(message, 0, message.length - 2);
+		crc.update(buffer, 0, byteCount - 2);
 
-		byte low = message[message.length - 2];
-		byte high = message[message.length - 1];
+		byte low = buffer[byteCount - 2];
+		byte high = buffer[byteCount - 1];
 		int crcValue = ((high & 0xFF) << 8) | (low & 0xFF);
 
 		if (crc.getValue() != crcValue) {
