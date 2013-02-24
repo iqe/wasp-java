@@ -86,13 +86,17 @@ public class WaspInputStream {
 		crc.reset();
 		crc.update(buffer, 0, byteCount - 2);
 
-		byte low = buffer[byteCount - 2];
-		byte high = buffer[byteCount - 1];
-		int crcValue = ((high & 0xFF) << 8) | (low & 0xFF);
-
+		int crcValue = readUnsignedShort(buffer, byteCount - 2);
 		if (crc.getValue() != crcValue) {
 			throw new CrcMismatchException(crc.getValue(), crcValue);
 		}
 
+	}
+
+	private int readUnsignedShort(byte[] buffer, int offset) {
+		byte low = buffer[offset];
+		byte high = buffer[offset + 1];
+
+		return ((high & 0xFF) << 8) | (low & 0xFF);
 	}
 }
