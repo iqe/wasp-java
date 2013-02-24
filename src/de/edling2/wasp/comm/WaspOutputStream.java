@@ -1,6 +1,6 @@
 package de.edling2.wasp.comm;
 
-import static de.edling2.wasp.comm.WaspMessage.*;
+import static de.edling2.wasp.comm.WaspStream.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
