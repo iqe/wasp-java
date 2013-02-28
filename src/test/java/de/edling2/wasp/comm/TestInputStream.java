@@ -10,7 +10,7 @@ public class TestInputStream extends InputStream {
 	private Queue<Integer> bytes;
 
 	public TestInputStream() {
-		bytes = new LinkedBlockingQueue<>();
+		bytes = new LinkedBlockingQueue<Integer>();
 	}
 
 	public void write(int b) {
