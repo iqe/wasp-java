@@ -41,4 +41,42 @@ public class WaspMessageFactory {
 	private HeartbeatMessage buildHeartbeatMessage() {
 		return new HeartbeatMessage();
 	}
+
+	public byte[] buildMessageBytes(WaspMessage message) {
+		if (message instanceof DigitalValueMessage) {
+			return buildDigitalValueMessageBytes((DigitalValueMessage)message);
+		}
+		if (message instanceof AnalogValueMessage) {
+			return buildAnalogValueMessageBytes((AnalogValueMessage)message);
+		}
+		if (message instanceof HeartbeatMessage) {
+			return buildHeartbeatMessageBytes((HeartbeatMessage)message);
+		}
+
+		throw new IllegalArgumentException(); // FIXME throw proper exception
+	}
+
+	private byte[] buildDigitalValueMessageBytes(DigitalValueMessage message) {
+		byte[] bytes = new byte[3];
+		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
+
+		bb.putUnsignedShort(message.getPin());
+		bb.put((byte)message.getValue().getChar());
+
+		return bytes;
+	}
+
+	private byte[] buildAnalogValueMessageBytes(AnalogValueMessage message) {
+		byte[] bytes = new byte[4];
+		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
+
+		bb.putUnsignedShort(message.getPin());
+		bb.putShort((short)message.getValue());
+
+		return bytes;
+	}
+
+	private byte[] buildHeartbeatMessageBytes(HeartbeatMessage message) {
+		return new byte[] { (byte)MSG_HEARTBEAT };
+	}
 }

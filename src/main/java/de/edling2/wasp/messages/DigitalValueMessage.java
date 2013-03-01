@@ -20,6 +20,10 @@ public class DigitalValueMessage extends AbstractWaspMessage {
 		private Value(char c) {
 			this.c = c;
 		}
+
+		public char getChar() {
+			return c;
+		}
 	}
 
 	private int pin;
