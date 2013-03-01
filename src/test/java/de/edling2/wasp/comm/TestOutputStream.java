@@ -7,15 +7,19 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class TestOutputStream extends OutputStream {
 
-	private Queue<Integer> bytes;
+	private Queue<Byte> bytes;
 
 	public TestOutputStream() {
-		bytes = new LinkedBlockingQueue<Integer>();
+		this(new LinkedBlockingQueue<Byte>());
+	}
+
+	public TestOutputStream(Queue<Byte> bytes) {
+		this.bytes = bytes;
 	}
 
 	public int read() {
-		Integer b = bytes.poll();
-		return b == null ? -1 : b;
+		Byte b = bytes.poll();
+		return b == null ? -1 : b & 0xFF;
 	}
 
 	public void clear() {
@@ -24,6 +28,6 @@ public class TestOutputStream extends OutputStream {
 
 	@Override
 	public void write(int b) throws IOException {
-		bytes.add(b);
+		bytes.add((byte)b);
 	}
 }
