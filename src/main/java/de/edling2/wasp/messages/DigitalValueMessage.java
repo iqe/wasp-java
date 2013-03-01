@@ -1,7 +1,5 @@
 package de.edling2.wasp.messages;
 
-import de.edling2.nio.MultiSignByteBuffer;
-
 public class DigitalValueMessage extends AbstractWaspMessage {
 	public enum Value {
 		High('H'),
@@ -14,7 +12,7 @@ public class DigitalValueMessage extends AbstractWaspMessage {
 					return v;
 				}
 			}
-			throw new IllegalArgumentException(); // FIXME throw proper exception
+			throw new IllegalArgumentException("'" + c + "' is not a valid DigitalValueMessage.Value");
 		}
 
 		private char c;
@@ -27,14 +25,10 @@ public class DigitalValueMessage extends AbstractWaspMessage {
 	private int pin;
 	private Value value;
 
-	DigitalValueMessage(MultiSignByteBuffer bb) {
+	public DigitalValueMessage(int pin, Value value) {
 		super();
-		parseBuffer(bb);
-	}
-
-	private void parseBuffer(MultiSignByteBuffer bb) {
-		pin = bb.getUnsigned();
-		value = Value.parse((char)bb.get());
+		this.pin = pin;
+		this.value = value;
 	}
 
 	public int getPin() {

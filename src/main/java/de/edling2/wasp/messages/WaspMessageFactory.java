@@ -10,17 +10,35 @@ public class WaspMessageFactory {
 
 	public WaspMessage buildMessage(byte[] buffer, int byteCount) {
 		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(buffer, 0, byteCount);
-		int command = bb.getUnsigned();
 
-		switch (command) {
+		int messageType = bb.getUnsigned();
+		switch (messageType) {
 			case MSG_DIGITAL_IN:
-				return new DigitalValueMessage(bb);
+				return buildDigitalValueMessage(bb);
 			case MSG_ANALOG_IN:
-				return new AnalogValueMessage(bb);
+				return buildAnalogValueMessage(bb);
 			case MSG_HEARTBEAT:
-				return new HeartbeatMessage();
+				return buildHeartbeatMessage();
 			default:
-				throw new IllegalArgumentException("Invalid command '" + command + "' in input buffer");
+				throw new UnknownMessageException(messageType);
 		}
+	}
+
+	private DigitalValueMessage buildDigitalValueMessage(MultiSignByteBuffer bb) {
+		int pin = bb.getUnsignedShort();
+		DigitalValueMessage.Value value = DigitalValueMessage.Value.parse((char)bb.get());
+
+		return new DigitalValueMessage(pin, value);
+	}
+
+	private AnalogValueMessage buildAnalogValueMessage(MultiSignByteBuffer bb) {
+		int pin = bb.getUnsignedShort();
+		int value = bb.getShort();
+
+		return new AnalogValueMessage(pin, value);
+	}
+
+	private HeartbeatMessage buildHeartbeatMessage() {
+		return new HeartbeatMessage();
 	}
 }
