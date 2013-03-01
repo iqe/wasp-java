@@ -51,6 +51,11 @@ public class MultiSignByteBuffer {
 		return this;
 	}
 
+	public MultiSignByteBuffer position(int newPosition) {
+		buf.position(newPosition);
+		return this;
+	}
+
 	/* byte */
 
 	public byte get() {
