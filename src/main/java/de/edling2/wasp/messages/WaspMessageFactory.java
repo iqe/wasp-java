@@ -6,6 +6,7 @@ public class WaspMessageFactory {
 
 	public static final int MSG_DIGITAL_IN = 0x01;
 	public static final int MSG_ANALOG_IN  = 0x02;
+	public static final int MSG_MOTOR_IN = 0x03;
 	public static final int MSG_HEARTBEAT  = 0xFF;
 
 	public WaspMessage buildMessage(byte[] buffer, int byteCount) {
@@ -17,6 +18,8 @@ public class WaspMessageFactory {
 				return buildDigitalValueMessage(bb);
 			case MSG_ANALOG_IN:
 				return buildAnalogValueMessage(bb);
+			case MSG_MOTOR_IN:
+				return buildDigitalMotorMessage(bb);
 			case MSG_HEARTBEAT:
 				return buildHeartbeatMessage();
 			default:
@@ -38,6 +41,13 @@ public class WaspMessageFactory {
 		return new AnalogValueMessage(pin, value);
 	}
 
+	private WaspMessage buildDigitalMotorMessage(MultiSignByteBuffer bb) {
+		int pin = bb.getUnsignedShort();
+		DigitalMotorMessage.Direction direction = DigitalMotorMessage.Direction.parse((char)bb.getUnsigned());
+
+		return new DigitalMotorMessage(pin, direction);
+	}
+
 	private HeartbeatMessage buildHeartbeatMessage() {
 		return new HeartbeatMessage();
 	}
@@ -49,11 +59,14 @@ public class WaspMessageFactory {
 		if (message instanceof AnalogValueMessage) {
 			return buildAnalogValueMessageBytes((AnalogValueMessage)message);
 		}
+		if (message instanceof DigitalMotorMessage) {
+			return buildDigitalMotorMessageBytes((DigitalMotorMessage)message);
+		}
 		if (message instanceof HeartbeatMessage) {
 			return buildHeartbeatMessageBytes((HeartbeatMessage)message);
 		}
 
-		throw new IllegalArgumentException(); // FIXME throw proper exception
+		throw new IllegalArgumentException("Don't know how to build bytes from message " + message);
 	}
 
 	private byte[] buildDigitalValueMessageBytes(DigitalValueMessage message) {
@@ -72,6 +85,16 @@ public class WaspMessageFactory {
 
 		bb.putUnsignedShort(message.getPin());
 		bb.putShort((short)message.getValue());
+
+		return bytes;
+	}
+
+	private byte[] buildDigitalMotorMessageBytes(DigitalMotorMessage message) {
+		byte[] bytes = new byte[3];
+		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
+
+		bb.putUnsignedShort(message.getPin());
+		bb.putUnsigned(message.getDirection().getValue());
 
 		return bytes;
 	}

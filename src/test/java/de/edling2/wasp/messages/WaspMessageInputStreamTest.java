@@ -55,6 +55,21 @@ public class WaspMessageInputStreamTest {
 	}
 
 	@Test
+	public void shouldReadDigitalMotorMessage() throws Exception {
+		addMessage(MSG_MOTOR_IN, usHigh(1), usLow(1), 0);
+		addMessage(MSG_MOTOR_IN, usHigh(2), usLow(2), 1);
+		addMessage(MSG_MOTOR_IN, usHigh(3), usLow(3), 2);
+
+		WaspMessage m1 = stream.readMessage();
+		WaspMessage m2 = stream.readMessage();
+		WaspMessage m3 = stream.readMessage();
+
+		assertIsDigitalMotorMessage(m1, 1, DigitalMotorMessage.Direction.Stop);
+		assertIsDigitalMotorMessage(m2, 2, DigitalMotorMessage.Direction.Forward);
+		assertIsDigitalMotorMessage(m3, 3, DigitalMotorMessage.Direction.Reverse);
+	}
+
+	@Test
 	public void shouldReadHeartbeatMessage() throws Exception {
 		addMessage(MSG_HEARTBEAT);
 		WaspMessage m = stream.readMessage();
@@ -80,6 +95,14 @@ public class WaspMessageInputStreamTest {
 		AnalogValueMessage avMessage = (AnalogValueMessage)message;
 		assertEquals(pin, avMessage.getPin());
 		assertEquals(value, avMessage.getValue());
+	}
+
+	private void assertIsDigitalMotorMessage(WaspMessage message, int pin, DigitalMotorMessage.Direction direction) {
+		assertEquals(DigitalMotorMessage.class, message.getClass());
+
+		DigitalMotorMessage dmMessage = (DigitalMotorMessage)message;
+		assertEquals(pin, dmMessage.getPin());
+		assertEquals(direction, dmMessage.getDirection());
 	}
 
 	private void assertIsHeartbeatMessage(WaspMessage message) {
