@@ -9,6 +9,12 @@ public class WaspMessageFactory {
 	public static final int MSG_MOTOR_IN = 0x03;
 	public static final int MSG_HEARTBEAT  = 0xFF;
 
+	private String sourcePrefix;
+
+	public WaspMessageFactory(String sourcePrefix) {
+		this.sourcePrefix = sourcePrefix;
+	}
+
 	public WaspMessage buildMessage(byte[] buffer, int byteCount) {
 		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(buffer, 0, byteCount);
 
@@ -31,25 +37,29 @@ public class WaspMessageFactory {
 		int pin = bb.getUnsignedShort();
 		DigitalValueMessage.Value value = DigitalValueMessage.Value.parse((char)bb.get());
 
-		return new DigitalValueMessage(pin, value);
+		return new DigitalValueMessage(buildSource(pin), value);
 	}
 
 	private AnalogValueMessage buildAnalogValueMessage(MultiSignByteBuffer bb) {
 		int pin = bb.getUnsignedShort();
 		int value = bb.getShort();
 
-		return new AnalogValueMessage(pin, value);
+		return new AnalogValueMessage(buildSource(pin), value);
 	}
 
 	private WaspMessage buildDigitalMotorMessage(MultiSignByteBuffer bb) {
 		int pin = bb.getUnsignedShort();
 		DigitalMotorMessage.Direction direction = DigitalMotorMessage.Direction.parse((char)bb.getUnsigned());
 
-		return new DigitalMotorMessage(pin, direction);
+		return new DigitalMotorMessage(buildSource(pin), direction);
 	}
 
 	private HeartbeatMessage buildHeartbeatMessage() {
-		return new HeartbeatMessage();
+		return new HeartbeatMessage(sourcePrefix);
+	}
+
+	private String buildSource(int pin) {
+		return sourcePrefix + "." + pin;
 	}
 
 	public byte[] buildMessageBytes(WaspMessage message) {
@@ -73,7 +83,7 @@ public class WaspMessageFactory {
 		byte[] bytes = new byte[3];
 		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
 
-		bb.putUnsignedShort(message.getPin());
+		bb.putUnsignedShort(parsePin(message.getSource()));
 		bb.put((byte)message.getValue().getChar());
 
 		return bytes;
@@ -83,7 +93,7 @@ public class WaspMessageFactory {
 		byte[] bytes = new byte[4];
 		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
 
-		bb.putUnsignedShort(message.getPin());
+		bb.putUnsignedShort(parsePin(message.getSource()));
 		bb.putShort((short)message.getValue());
 
 		return bytes;
@@ -93,7 +103,7 @@ public class WaspMessageFactory {
 		byte[] bytes = new byte[3];
 		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
 
-		bb.putUnsignedShort(message.getPin());
+		bb.putUnsignedShort(parsePin(message.getSource()));
 		bb.putUnsigned(message.getDirection().getValue());
 
 		return bytes;
@@ -101,5 +111,10 @@ public class WaspMessageFactory {
 
 	private byte[] buildHeartbeatMessageBytes(HeartbeatMessage message) {
 		return new byte[] { (byte)MSG_HEARTBEAT };
+	}
+
+	private int parsePin(String source) {
+		String s = source.substring(sourcePrefix.length() + 1);
+		return Integer.parseInt(s);
 	}
 }

@@ -26,17 +26,11 @@ public class DigitalMotorMessage extends AbstractWaspMessage {
 		}
 	}
 
-	private int pin;
 	private Direction direction;
 
-	public DigitalMotorMessage(int pin, Direction direction) {
-		super();
-		this.pin = pin;
+	public DigitalMotorMessage(String source, Direction direction) {
+		super(source);
 		this.direction = direction;
-	}
-
-	public int getPin() {
-		return pin;
 	}
 
 	public Direction getDirection() {

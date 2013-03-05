@@ -16,14 +16,14 @@ public class WaspMessageOutputStreamTest {
 	@Before
 	public void setUp() {
 		s = new TestStream();
-		stream = new WaspMessageOutputStream(s.waspOut);
+		stream = new WaspMessageOutputStream(s.waspOut, "X");
 	}
 
 	@Test
 	public void shouldWriteDigitalValueMessage() throws Exception {
-		stream.writeMessage(new DigitalValueMessage(1, Value.High));
-		stream.writeMessage(new DigitalValueMessage(2, Value.Low));
-		stream.writeMessage(new DigitalValueMessage(3, Value.Toggle));
+		stream.writeMessage(new DigitalValueMessage("X.1", Value.High));
+		stream.writeMessage(new DigitalValueMessage("X.2", Value.Low));
+		stream.writeMessage(new DigitalValueMessage("X.3", Value.Toggle));
 
 		byte[] m1 = s.waspIn.readMessage();
 		byte[] m2 = s.waspIn.readMessage();
@@ -36,11 +36,11 @@ public class WaspMessageOutputStreamTest {
 
 	@Test
 	public void shouldWriteAnalogValueMessage() throws Exception {
-		stream.writeMessage(new AnalogValueMessage(1, 0));
-		stream.writeMessage(new AnalogValueMessage(2, 15));
-		stream.writeMessage(new AnalogValueMessage(3, -5));
-		stream.writeMessage(new AnalogValueMessage(4, Short.MIN_VALUE));
-		stream.writeMessage(new AnalogValueMessage(5, Short.MAX_VALUE));
+		stream.writeMessage(new AnalogValueMessage("X.1", 0));
+		stream.writeMessage(new AnalogValueMessage("X.2", 15));
+		stream.writeMessage(new AnalogValueMessage("X.3", -5));
+		stream.writeMessage(new AnalogValueMessage("X.4", Short.MIN_VALUE));
+		stream.writeMessage(new AnalogValueMessage("X.5", Short.MAX_VALUE));
 
 		byte[] m1 = s.waspIn.readMessage();
 		byte[] m2 = s.waspIn.readMessage();
@@ -57,9 +57,9 @@ public class WaspMessageOutputStreamTest {
 
 	@Test
 	public void shouldWriteDigitalMotorMessage() throws Exception {
-		stream.writeMessage(new DigitalMotorMessage(1, DigitalMotorMessage.Direction.Stop));
-		stream.writeMessage(new DigitalMotorMessage(2, DigitalMotorMessage.Direction.Forward));
-		stream.writeMessage(new DigitalMotorMessage(3, DigitalMotorMessage.Direction.Reverse));
+		stream.writeMessage(new DigitalMotorMessage("X.1", DigitalMotorMessage.Direction.Stop));
+		stream.writeMessage(new DigitalMotorMessage("X.2", DigitalMotorMessage.Direction.Forward));
+		stream.writeMessage(new DigitalMotorMessage("X.3", DigitalMotorMessage.Direction.Reverse));
 
 		byte[] m1 = s.waspIn.readMessage();
 		byte[] m2 = s.waspIn.readMessage();
@@ -72,7 +72,7 @@ public class WaspMessageOutputStreamTest {
 
 	@Test
 	public void shouldWriteHeartbeatMessage() throws Exception {
-		stream.writeMessage(new HeartbeatMessage());
+		stream.writeMessage(new HeartbeatMessage("X"));
 
 		byte[] m = s.waspIn.readMessage();
 

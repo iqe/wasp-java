@@ -13,25 +13,25 @@ public class WaspMessageFactoryTest {
 
 	@Before
 	public void setUp() {
-		factory = new WaspMessageFactory();
+		factory = new WaspMessageFactory("X");
 	}
 
 	@Test
 	public void shouldBuildDigitalValueMessage() throws Exception {
 		buildMessageFrom(0x01, usHigh(7), usLow(7), 'T');
-		expectDigitalValueMessage(7, DigitalValueMessage.Value.Toggle);
+		expectDigitalValueMessage("X.7", DigitalValueMessage.Value.Toggle);
 	}
 
 	@Test
 	public void shouldBuildAnalogValueMessage() throws Exception {
 		buildMessageFrom(0x02, usHigh(7), usLow(7), usHigh(1337), usLow(1337));
-		expectAnalogValueMessage(7, 1337);
+		expectAnalogValueMessage("X.7", 1337);
 	}
 
 	@Test
 	public void shouldBuildHeartbeatMessage() throws Exception {
 		buildMessageFrom(0xFF);
-		expectHeartbeatMessage();
+		expectHeartbeatMessage("X");
 	}
 
 	@Test
@@ -53,23 +53,24 @@ public class WaspMessageFactoryTest {
 		message = factory.buildMessage(messageBytes, messageBytes.length);
 	}
 
-	private void expectDigitalValueMessage(int pin, DigitalValueMessage.Value value) throws Exception {
+	private void expectDigitalValueMessage(String source, DigitalValueMessage.Value value) throws Exception {
 		assertTrue(message instanceof DigitalValueMessage);
 		assertTrue(message.getTimestamp() > 0);
-		assertEquals(pin, ((DigitalValueMessage)message).getPin());
+		assertEquals(source, message.getSource());
 		assertEquals(value, ((DigitalValueMessage)message).getValue());
 	}
 
-	private void expectAnalogValueMessage(int pin, int value) throws Exception {
+	private void expectAnalogValueMessage(String source, int value) throws Exception {
 		assertTrue(message instanceof AnalogValueMessage);
 		assertTrue(message.getTimestamp() > 0);
-		assertEquals(pin, ((AnalogValueMessage)message).getPin());
+		assertEquals(source, message.getSource());
 		assertEquals(value, ((AnalogValueMessage)message).getValue());
 	}
 
-	private void expectHeartbeatMessage() throws Exception {
+	private void expectHeartbeatMessage(String source) throws Exception {
 		assertTrue(message instanceof HeartbeatMessage);
 		assertTrue(message.getTimestamp() > 0);
+		assertEquals(source, message.getSource());
 	}
 
 	private void expectException(Exception expected) throws Exception {

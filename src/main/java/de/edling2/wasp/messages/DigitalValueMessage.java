@@ -26,17 +26,11 @@ public class DigitalValueMessage extends AbstractWaspMessage {
 		}
 	}
 
-	private int pin;
 	private Value value;
 
-	public DigitalValueMessage(int pin, Value value) {
-		super();
-		this.pin = pin;
+	public DigitalValueMessage(String source, Value value) {
+		super(source);
 		this.value = value;
-	}
-
-	public int getPin() {
-		return pin;
 	}
 
 	public Value getValue() {

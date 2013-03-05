@@ -8,8 +8,8 @@ public class WaspMessageOutputStream {
 	private WaspOutputStream out;
 	private WaspMessageFactory factory;
 
-	public WaspMessageOutputStream(WaspOutputStream out) {
-		this(out, new WaspMessageFactory());
+	public WaspMessageOutputStream(WaspOutputStream out, String sourcePrefix) {
+		this(out, new WaspMessageFactory(sourcePrefix));
 	}
 
 	public WaspMessageOutputStream(WaspOutputStream out, WaspMessageFactory factory) {

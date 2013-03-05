@@ -15,7 +15,7 @@ public class WaspMessageInputStreamTest {
 	@Before
 	public void setUp() {
 		s = new TestStream();
-		stream = new WaspMessageInputStream(s.waspIn);
+		stream = new WaspMessageInputStream(s.waspIn, "X");
 	}
 
 	@Test
@@ -28,9 +28,9 @@ public class WaspMessageInputStreamTest {
 		WaspMessage msgLow = stream.readMessage();
 		WaspMessage msgToggle = stream.readMessage();
 
-		assertIsDigitalValueMessage(msgHigh, 1, DigitalValueMessage.Value.High);
-		assertIsDigitalValueMessage(msgLow, 2, DigitalValueMessage.Value.Low);
-		assertIsDigitalValueMessage(msgToggle, 3, DigitalValueMessage.Value.Toggle);
+		assertIsDigitalValueMessage(msgHigh, "X.1", DigitalValueMessage.Value.High);
+		assertIsDigitalValueMessage(msgLow, "X.2", DigitalValueMessage.Value.Low);
+		assertIsDigitalValueMessage(msgToggle, "X.3", DigitalValueMessage.Value.Toggle);
 	}
 
 	@Test
@@ -47,11 +47,11 @@ public class WaspMessageInputStreamTest {
 		WaspMessage m4 = stream.readMessage();
 		WaspMessage m5 = stream.readMessage();
 
-		assertIsAnalogValueMessage(m1, 1, 0);
-		assertIsAnalogValueMessage(m2, 2, 15);
-		assertIsAnalogValueMessage(m3, 3, -5);
-		assertIsAnalogValueMessage(m4, 4, Short.MIN_VALUE);
-		assertIsAnalogValueMessage(m5, 5, Short.MAX_VALUE);
+		assertIsAnalogValueMessage(m1, "X.1", 0);
+		assertIsAnalogValueMessage(m2, "X.2", 15);
+		assertIsAnalogValueMessage(m3, "X.3", -5);
+		assertIsAnalogValueMessage(m4, "X.4", Short.MIN_VALUE);
+		assertIsAnalogValueMessage(m5, "X.5", Short.MAX_VALUE);
 	}
 
 	@Test
@@ -64,16 +64,16 @@ public class WaspMessageInputStreamTest {
 		WaspMessage m2 = stream.readMessage();
 		WaspMessage m3 = stream.readMessage();
 
-		assertIsDigitalMotorMessage(m1, 1, DigitalMotorMessage.Direction.Stop);
-		assertIsDigitalMotorMessage(m2, 2, DigitalMotorMessage.Direction.Forward);
-		assertIsDigitalMotorMessage(m3, 3, DigitalMotorMessage.Direction.Reverse);
+		assertIsDigitalMotorMessage(m1, "X.1", DigitalMotorMessage.Direction.Stop);
+		assertIsDigitalMotorMessage(m2, "X.2", DigitalMotorMessage.Direction.Forward);
+		assertIsDigitalMotorMessage(m3, "X.3", DigitalMotorMessage.Direction.Reverse);
 	}
 
 	@Test
 	public void shouldReadHeartbeatMessage() throws Exception {
 		addMessage(MSG_HEARTBEAT);
 		WaspMessage m = stream.readMessage();
-		assertIsHeartbeatMessage(m);
+		assertIsHeartbeatMessage(m, "X");
 	}
 
 	private void addMessage(int... b) throws Exception {
@@ -81,31 +81,32 @@ public class WaspMessageInputStreamTest {
 		s.waspOut.writeMessage(bytes);
 	}
 
-	private void assertIsDigitalValueMessage(WaspMessage message, int pin, DigitalValueMessage.Value value) {
+	private void assertIsDigitalValueMessage(WaspMessage message, String source, DigitalValueMessage.Value value) {
 		assertEquals(DigitalValueMessage.class, message.getClass());
 
 		DigitalValueMessage dvMessage = (DigitalValueMessage)message;
-		assertEquals(pin, dvMessage.getPin());
+		assertEquals(source, dvMessage.getSource());
 		assertEquals(value, dvMessage.getValue());
 	}
 
-	private void assertIsAnalogValueMessage(WaspMessage message, int pin, int value) {
+	private void assertIsAnalogValueMessage(WaspMessage message, String source, int value) {
 		assertEquals(AnalogValueMessage.class, message.getClass());
 
 		AnalogValueMessage avMessage = (AnalogValueMessage)message;
-		assertEquals(pin, avMessage.getPin());
+		assertEquals(source, avMessage.getSource());
 		assertEquals(value, avMessage.getValue());
 	}
 
-	private void assertIsDigitalMotorMessage(WaspMessage message, int pin, DigitalMotorMessage.Direction direction) {
+	private void assertIsDigitalMotorMessage(WaspMessage message, String source, DigitalMotorMessage.Direction direction) {
 		assertEquals(DigitalMotorMessage.class, message.getClass());
 
 		DigitalMotorMessage dmMessage = (DigitalMotorMessage)message;
-		assertEquals(pin, dmMessage.getPin());
+		assertEquals(source, dmMessage.getSource());
 		assertEquals(direction, dmMessage.getDirection());
 	}
 
-	private void assertIsHeartbeatMessage(WaspMessage message) {
+	private void assertIsHeartbeatMessage(WaspMessage message, String source) {
 		assertEquals(HeartbeatMessage.class, message.getClass());
+		assertEquals(source, message.getSource());
 	}
 }
