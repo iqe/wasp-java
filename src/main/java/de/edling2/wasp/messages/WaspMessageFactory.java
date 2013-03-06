@@ -80,9 +80,10 @@ public class WaspMessageFactory {
 	}
 
 	private byte[] buildDigitalValueMessageBytes(DigitalValueMessage message) {
-		byte[] bytes = new byte[3];
+		byte[] bytes = new byte[4];
 		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
 
+		bb.putUnsigned(MSG_DIGITAL_IN);
 		bb.putUnsignedShort(parsePin(message.getSource()));
 		bb.put((byte)message.getValue().getChar());
 
@@ -90,9 +91,10 @@ public class WaspMessageFactory {
 	}
 
 	private byte[] buildAnalogValueMessageBytes(AnalogValueMessage message) {
-		byte[] bytes = new byte[4];
+		byte[] bytes = new byte[5];
 		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
 
+		bb.putUnsigned(MSG_ANALOG_IN);
 		bb.putUnsignedShort(parsePin(message.getSource()));
 		bb.putShort((short)message.getValue());
 
@@ -100,9 +102,10 @@ public class WaspMessageFactory {
 	}
 
 	private byte[] buildDigitalMotorMessageBytes(DigitalMotorMessage message) {
-		byte[] bytes = new byte[3];
+		byte[] bytes = new byte[4];
 		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
 
+		bb.putUnsigned(MSG_MOTOR_IN);
 		bb.putUnsignedShort(parsePin(message.getSource()));
 		bb.putUnsigned(message.getDirection().getValue());
 

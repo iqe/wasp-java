@@ -7,6 +7,7 @@ import de.edling2.wasp.comm.TestStream;
 import de.edling2.wasp.messages.DigitalValueMessage.Value;
 
 import static de.edling2.wasp.comm.TestStream.*;
+import static de.edling2.wasp.messages.WaspMessageFactory.*;
 import static org.junit.Assert.*;
 
 public class WaspMessageOutputStreamTest {
@@ -29,9 +30,9 @@ public class WaspMessageOutputStreamTest {
 		byte[] m2 = s.waspIn.readMessage();
 		byte[] m3 = s.waspIn.readMessage();
 
-		assertIsMessage(m1, 0x00, 0x01, 'H');
-		assertIsMessage(m2, 0x00, 0x02, 'L');
-		assertIsMessage(m3, 0x00, 0x03, 'T');
+		assertIsMessage(m1, MSG_DIGITAL_IN, 0x00, 0x01, 'H');
+		assertIsMessage(m2, MSG_DIGITAL_IN, 0x00, 0x02, 'L');
+		assertIsMessage(m3, MSG_DIGITAL_IN, 0x00, 0x03, 'T');
 	}
 
 	@Test
@@ -48,11 +49,11 @@ public class WaspMessageOutputStreamTest {
 		byte[] m4 = s.waspIn.readMessage();
 		byte[] m5 = s.waspIn.readMessage();
 
-		assertIsMessage(m1, 0x00, 0x01, ssHigh(0), ssLow(0));
-		assertIsMessage(m2, 0x00, 0x02, ssHigh(15), ssLow(15));
-		assertIsMessage(m3, 0x00, 0x03, ssHigh(-5), ssLow(-5));
-		assertIsMessage(m4, 0x00, 0x04, ssHigh(Short.MIN_VALUE), ssLow(Short.MIN_VALUE));
-		assertIsMessage(m5, 0x00, 0x05, ssHigh(Short.MAX_VALUE), ssLow(Short.MAX_VALUE));
+		assertIsMessage(m1, MSG_ANALOG_IN, 0x00, 0x01, ssHigh(0), ssLow(0));
+		assertIsMessage(m2, MSG_ANALOG_IN, 0x00, 0x02, ssHigh(15), ssLow(15));
+		assertIsMessage(m3, MSG_ANALOG_IN, 0x00, 0x03, ssHigh(-5), ssLow(-5));
+		assertIsMessage(m4, MSG_ANALOG_IN, 0x00, 0x04, ssHigh(Short.MIN_VALUE), ssLow(Short.MIN_VALUE));
+		assertIsMessage(m5, MSG_ANALOG_IN, 0x00, 0x05, ssHigh(Short.MAX_VALUE), ssLow(Short.MAX_VALUE));
 	}
 
 	@Test
@@ -65,9 +66,9 @@ public class WaspMessageOutputStreamTest {
 		byte[] m2 = s.waspIn.readMessage();
 		byte[] m3 = s.waspIn.readMessage();
 
-		assertIsMessage(m1, 0x00, 0x01, 0);
-		assertIsMessage(m2, 0x00, 0x02, 1);
-		assertIsMessage(m3, 0x00, 0x03, 2);
+		assertIsMessage(m1, MSG_MOTOR_IN, 0x00, 0x01, 0);
+		assertIsMessage(m2, MSG_MOTOR_IN, 0x00, 0x02, 1);
+		assertIsMessage(m3, MSG_MOTOR_IN, 0x00, 0x03, 2);
 	}
 
 	@Test
