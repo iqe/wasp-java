@@ -49,6 +49,14 @@ public class TestStream {
 		return bytes;
 	}
 
+	public static int[] buildIntArray(byte[] bytes) {
+		int[] bytesAsInts = new int[bytes.length];
+		for (int i = 0; i < bytesAsInts.length; i++) {
+			bytesAsInts[i] = bytes[i] & 0xFF;
+		}
+		return bytesAsInts;
+	}
+
 	public static byte[] crc(byte... bytes)
 	{
 		try {
