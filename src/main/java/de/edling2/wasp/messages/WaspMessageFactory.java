@@ -3,10 +3,9 @@ package de.edling2.wasp.messages;
 import de.edling2.nio.MultiSignByteBuffer;
 
 public class WaspMessageFactory {
-
 	public static final int MSG_DIGITAL_IN = 0x01;
 	public static final int MSG_ANALOG_IN  = 0x02;
-	public static final int MSG_MOTOR_IN = 0x03;
+	public static final int MSG_MOTOR_IN   = 0x03;
 	public static final int MSG_HEARTBEAT  = 0xFF;
 
 	private String sourcePrefix;
