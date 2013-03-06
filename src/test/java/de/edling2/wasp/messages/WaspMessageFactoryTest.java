@@ -40,6 +40,21 @@ public class WaspMessageFactoryTest {
 		expectException(new UnknownMessageException(0x42));
 	}
 
+	@Test
+	public void shouldThrowInvalidSubjectException() throws Exception {
+		try {
+			factory.buildMessageBytes(new DigitalValueMessage("Bad Source", DigitalValueMessage.Value.High));
+		} catch (Exception e) {
+			assertEquals("'Bad Source' is no valid message subject", e.getMessage());
+		}
+
+		try {
+			factory.buildMessageBytes(new DigitalValueMessage("", DigitalValueMessage.Value.High));
+		} catch (Exception e) {
+			assertEquals("'' is no valid message subject", e.getMessage());
+		}
+	}
+
 	private void buildMessageFrom(int... bytes) {
 		setMessage(bytes);
 		buildMessage();

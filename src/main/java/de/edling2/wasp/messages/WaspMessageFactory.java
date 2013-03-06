@@ -116,7 +116,13 @@ public class WaspMessageFactory {
 	}
 
 	private int parsePin(String source) {
-		String s = source.substring(sourcePrefix.length() + 1);
-		return Integer.parseInt(s);
+		try {
+			String s = source.substring(sourcePrefix.length() + 1);
+			return Integer.parseInt(s);
+		} catch (IndexOutOfBoundsException e) {
+			throw new InvalidSubjectException(source);
+		} catch (NumberFormatException e) {
+			throw new InvalidSubjectException(source);
+		}
 	}
 }
