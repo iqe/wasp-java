@@ -61,6 +61,10 @@ public class WaspMessageFactory {
 		return sourcePrefix + "." + pin;
 	}
 
+	public boolean handlesMessage(WaspMessage message) {
+		return message.getSource().matches(sourcePrefix + "\\.\\d+");
+	}
+
 	public byte[] buildMessageBytes(WaspMessage message) {
 		if (message instanceof DigitalValueMessage) {
 			return buildDigitalValueMessageBytes((DigitalValueMessage)message);

@@ -21,4 +21,8 @@ public class WaspMessageOutputStream {
 		byte[] bytes = factory.buildMessageBytes(message);
 		out.writeMessage(bytes);
 	}
+
+	public boolean handlesMessage(WaspMessage message) {
+		return factory.handlesMessage(message);
+	}
 }
