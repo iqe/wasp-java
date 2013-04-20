@@ -90,7 +90,6 @@ public class WaspInputStream {
 		if (crc.getValue() != crcValue) {
 			throw new CrcMismatchException(crc.getValue(), crcValue);
 		}
-
 	}
 
 	private int readUnsignedShort(byte[] buffer, int offset) {
