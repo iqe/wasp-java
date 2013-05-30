@@ -14,11 +14,8 @@ public class WaspMessageFactory {
 		this.sourcePrefix = "W" + hashCode();
 	}
 
-	public WaspMessageFactory(String sourcePrefix) {
-		this.sourcePrefix = sourcePrefix;
-	}
-
-	public void setSourcePrefix(String sourcePrefix) {
+	/* Constructor with given sourcePrefix for unit tests only */
+	WaspMessageFactory(String sourcePrefix) {
 		this.sourcePrefix = sourcePrefix;
 	}
 
@@ -38,7 +35,9 @@ public class WaspMessageFactory {
 			case MSG_MOTOR_IN:
 				return buildDigitalMotorMessage(bb);
 			case MSG_HEARTBEAT:
-				return buildHeartbeatMessage(bb);
+				WaspMessage message = buildHeartbeatMessage(bb);
+				setSourcePrefixFromMessage(message);
+				return message;
 			default:
 				throw new UnknownMessageException(messageType);
 		}
@@ -142,6 +141,12 @@ public class WaspMessageFactory {
 		System.arraycopy(messageSource, 0, bytes, 2, messageSource.length);
 
 		return bytes;
+	}
+
+	private void setSourcePrefixFromMessage(WaspMessage message) {
+		if (!sourcePrefix.equals(message.getSource())) {
+			sourcePrefix = message.getSource();
+		}
 	}
 
 	private int parsePin(String source) {

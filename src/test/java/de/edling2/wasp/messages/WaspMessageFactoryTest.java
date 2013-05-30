@@ -23,17 +23,6 @@ public class WaspMessageFactoryTest {
 	}
 
 	@Test
-	public void shouldUseGivenSourcePrefix() throws Exception {
-		factory.setSourcePrefix("A");
-		buildMessageFrom(0x01, usHigh(7), usLow(7), 'H');
-		expectDigitalValueMessage("A.7", DigitalValueMessage.Value.High);
-
-		factory.setSourcePrefix("B");
-		buildMessageFrom(0x01, usHigh(7), usLow(7), 'H');
-		expectDigitalValueMessage("B.7", DigitalValueMessage.Value.High);
-	}
-
-	@Test
 	public void shouldBuildDigitalValueMessage() throws Exception {
 		buildMessageFrom(0x01, usHigh(7), usLow(7), 'T');
 		expectDigitalValueMessage("X.7", DigitalValueMessage.Value.Toggle);
@@ -49,6 +38,18 @@ public class WaspMessageFactoryTest {
 	public void shouldBuildHeartbeatMessageWithPrefixFromMessage() throws Exception {
 		buildMessageFrom(0xFF, 1, 'Z');
 		expectHeartbeatMessage("Z");
+	}
+
+	@Test
+	public void shouldSetSourcePrefixFromHeartbeatMessage() throws Exception {
+		buildMessageFrom(0x01, usHigh(7), usLow(7), 'H');
+		expectDigitalValueMessage("X.7", DigitalValueMessage.Value.High);
+
+		buildMessageFrom(0xFF, 1, 'Z');
+		expectHeartbeatMessage("Z");
+
+		buildMessageFrom(0x01, usHigh(7), usLow(7), 'H');
+		expectDigitalValueMessage("Z.7", DigitalValueMessage.Value.High);
 	}
 
 	@Test

@@ -13,9 +13,13 @@ public class WaspMessageInputStreamTest {
 	private WaspMessageInputStream stream;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
 		s = new TestStream();
-		stream = new WaspMessageInputStream(s.waspIn, "X");
+		stream = new WaspMessageInputStream(s.waspIn);
+
+		// Configure sourcePrefix
+		addMessage(MSG_HEARTBEAT, 1, 'X');
+		stream.readMessage();
 	}
 
 	@Test
