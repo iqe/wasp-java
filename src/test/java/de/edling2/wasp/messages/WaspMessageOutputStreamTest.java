@@ -77,7 +77,7 @@ public class WaspMessageOutputStreamTest {
 
 		byte[] m = s.waspIn.readMessage();
 
-		assertIsMessage(m, WaspMessageFactory.MSG_HEARTBEAT);
+		assertIsMessage(m, WaspMessageFactory.MSG_HEARTBEAT, 1, 'X');
 	}
 
 	private void assertIsMessage(byte[] actual, int... expectedBytes) {

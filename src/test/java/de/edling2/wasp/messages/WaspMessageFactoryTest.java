@@ -29,9 +29,9 @@ public class WaspMessageFactoryTest {
 	}
 
 	@Test
-	public void shouldBuildHeartbeatMessage() throws Exception {
-		buildMessageFrom(0xFF);
-		expectHeartbeatMessage("X");
+	public void shouldBuildHeartbeatMessageWithPrefixFromMessage() throws Exception {
+		buildMessageFrom(0xFF, 1, 'Z');
+		expectHeartbeatMessage("Z");
 	}
 
 	@Test

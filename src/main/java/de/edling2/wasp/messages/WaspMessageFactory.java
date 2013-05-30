@@ -26,7 +26,7 @@ public class WaspMessageFactory {
 			case MSG_MOTOR_IN:
 				return buildDigitalMotorMessage(bb);
 			case MSG_HEARTBEAT:
-				return buildHeartbeatMessage();
+				return buildHeartbeatMessage(bb);
 			default:
 				throw new UnknownMessageException(messageType);
 		}
@@ -53,8 +53,13 @@ public class WaspMessageFactory {
 		return new DigitalMotorMessage(buildSource(pin), direction);
 	}
 
-	private HeartbeatMessage buildHeartbeatMessage() {
-		return new HeartbeatMessage(sourcePrefix);
+	private HeartbeatMessage buildHeartbeatMessage(MultiSignByteBuffer bb) {
+		int length = bb.getUnsigned();
+		StringBuilder sourcePrefixBuilder = new StringBuilder(length);
+		for (int i = 0; i < length; i++) {
+			sourcePrefixBuilder.append((char)bb.get());
+		}
+		return new HeartbeatMessage(sourcePrefixBuilder.toString());
 	}
 
 	private String buildSource(int pin) {
@@ -116,7 +121,15 @@ public class WaspMessageFactory {
 	}
 
 	private byte[] buildHeartbeatMessageBytes(HeartbeatMessage message) {
-		return new byte[] { (byte)MSG_HEARTBEAT };
+		byte[] messageSource = message.getSource().getBytes();
+		byte[] bytes = new byte[messageSource.length + 2];
+		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
+
+		bb.putUnsigned(MSG_HEARTBEAT);
+		bb.putUnsigned(messageSource.length);
+		System.arraycopy(messageSource, 0, bytes, 2, messageSource.length);
+
+		return bytes;
 	}
 
 	private int parsePin(String source) {

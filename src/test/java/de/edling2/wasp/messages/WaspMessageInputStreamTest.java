@@ -71,7 +71,7 @@ public class WaspMessageInputStreamTest {
 
 	@Test
 	public void shouldReadHeartbeatMessage() throws Exception {
-		addMessage(MSG_HEARTBEAT);
+		addMessage(MSG_HEARTBEAT, 1, 'X');
 		WaspMessage m = stream.readMessage();
 		assertIsHeartbeatMessage(m, "X");
 	}
