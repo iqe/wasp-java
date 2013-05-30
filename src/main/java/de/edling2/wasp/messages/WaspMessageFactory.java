@@ -10,8 +10,20 @@ public class WaspMessageFactory {
 
 	private String sourcePrefix;
 
+	public WaspMessageFactory() {
+		this.sourcePrefix = "W" + hashCode();
+	}
+
 	public WaspMessageFactory(String sourcePrefix) {
 		this.sourcePrefix = sourcePrefix;
+	}
+
+	public void setSourcePrefix(String sourcePrefix) {
+		this.sourcePrefix = sourcePrefix;
+	}
+
+	public String getSourcePrefix() {
+		return sourcePrefix;
 	}
 
 	public WaspMessage buildMessage(byte[] buffer, int byteCount) {

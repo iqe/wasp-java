@@ -17,6 +17,23 @@ public class WaspMessageFactoryTest {
 	}
 
 	@Test
+	public void shouldSetSourcePrefixToHashCode() throws Exception {
+		factory = new WaspMessageFactory();
+		assertEquals("W" + factory.hashCode(), factory.getSourcePrefix());
+	}
+
+	@Test
+	public void shouldUseGivenSourcePrefix() throws Exception {
+		factory.setSourcePrefix("A");
+		buildMessageFrom(0x01, usHigh(7), usLow(7), 'H');
+		expectDigitalValueMessage("A.7", DigitalValueMessage.Value.High);
+
+		factory.setSourcePrefix("B");
+		buildMessageFrom(0x01, usHigh(7), usLow(7), 'H');
+		expectDigitalValueMessage("B.7", DigitalValueMessage.Value.High);
+	}
+
+	@Test
 	public void shouldBuildDigitalValueMessage() throws Exception {
 		buildMessageFrom(0x01, usHigh(7), usLow(7), 'T');
 		expectDigitalValueMessage("X.7", DigitalValueMessage.Value.Toggle);
