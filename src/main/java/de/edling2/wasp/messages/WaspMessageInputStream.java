@@ -9,12 +9,12 @@ public class WaspMessageInputStream {
 	private WaspMessageFactory messageFactory;
 	private byte[] buffer;
 
-	public WaspMessageInputStream(WaspInputStream input) {
-		this(input, new byte[1024]);
+	public WaspMessageInputStream(WaspInputStream input, String sourcePrefix) {
+		this(input, new byte[1024], sourcePrefix);
 	}
 
-	public WaspMessageInputStream(WaspInputStream input, byte[] buffer) {
-		this(input, buffer, new WaspMessageFactory());
+	public WaspMessageInputStream(WaspInputStream input, byte[] buffer, String sourcePrefix) {
+		this(input, buffer, new WaspMessageFactory(sourcePrefix));
 	}
 
 	public WaspMessageInputStream(WaspInputStream input, byte[] buffer, WaspMessageFactory messageFactory) {

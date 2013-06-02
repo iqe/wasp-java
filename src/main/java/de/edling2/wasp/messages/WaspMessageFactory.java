@@ -14,13 +14,16 @@ public class WaspMessageFactory {
 		this.sourcePrefix = "W" + hashCode();
 	}
 
-	/* Constructor with given sourcePrefix for unit tests only */
-	WaspMessageFactory(String sourcePrefix) {
+	public WaspMessageFactory(String sourcePrefix) {
 		this.sourcePrefix = sourcePrefix;
 	}
 
 	public String getSourcePrefix() {
 		return sourcePrefix;
+	}
+
+	public void setSourcePrefix(String sourcePrefix) {
+		this.sourcePrefix = sourcePrefix;
 	}
 
 	public WaspMessage buildMessage(byte[] buffer, int byteCount) {
@@ -35,9 +38,7 @@ public class WaspMessageFactory {
 			case MSG_MOTOR_IN:
 				return buildDigitalMotorMessage(bb);
 			case MSG_HEARTBEAT:
-				WaspMessage message = buildHeartbeatMessage(bb);
-				setSourcePrefixFromMessage(message);
-				return message;
+				return buildHeartbeatMessage(bb);
 			default:
 				throw new UnknownMessageException(messageType);
 		}
@@ -66,11 +67,11 @@ public class WaspMessageFactory {
 
 	private HeartbeatMessage buildHeartbeatMessage(MultiSignByteBuffer bb) {
 		int length = bb.getUnsigned();
-		StringBuilder sourcePrefixBuilder = new StringBuilder(length);
+		StringBuilder name = new StringBuilder(length);
 		for (int i = 0; i < length; i++) {
-			sourcePrefixBuilder.append((char)bb.get());
+			name.append((char)bb.get());
 		}
-		return new HeartbeatMessage(sourcePrefixBuilder.toString());
+		return new HeartbeatMessage(sourcePrefix, name.toString());
 	}
 
 	private String buildSource(int pin) {
@@ -132,21 +133,15 @@ public class WaspMessageFactory {
 	}
 
 	private byte[] buildHeartbeatMessageBytes(HeartbeatMessage message) {
-		byte[] messageSource = message.getSource().getBytes();
-		byte[] bytes = new byte[messageSource.length + 2];
-		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
+		byte[] nameBytes = message.getName().getBytes();
+		byte[] messageBytes = new byte[nameBytes.length + 2];
+		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(messageBytes);
 
 		bb.putUnsigned(MSG_HEARTBEAT);
-		bb.putUnsigned(messageSource.length);
-		System.arraycopy(messageSource, 0, bytes, 2, messageSource.length);
+		bb.putUnsigned(nameBytes.length);
+		System.arraycopy(nameBytes, 0, messageBytes, 2, nameBytes.length);
 
-		return bytes;
-	}
-
-	private void setSourcePrefixFromMessage(WaspMessage message) {
-		if (!sourcePrefix.equals(message.getSource())) {
-			sourcePrefix = message.getSource();
-		}
+		return messageBytes;
 	}
 
 	private int parsePin(String source) {

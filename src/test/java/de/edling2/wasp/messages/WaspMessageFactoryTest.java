@@ -23,6 +23,16 @@ public class WaspMessageFactoryTest {
 	}
 
 	@Test
+	public void shouldUseGivenSourcePrefix() throws Exception {
+		buildMessageFrom(0x01, usHigh(7), usLow(7), 'H');
+		expectDigitalValueMessage("X.7", DigitalValueMessage.Value.High);
+
+		factory.setSourcePrefix("Z");
+		buildMessageFrom(0x01, usHigh(7), usLow(7), 'H');
+		expectDigitalValueMessage("Z.7", DigitalValueMessage.Value.High);
+	}
+
+	@Test
 	public void shouldBuildDigitalValueMessage() throws Exception {
 		buildMessageFrom(0x01, usHigh(7), usLow(7), 'T');
 		expectDigitalValueMessage("X.7", DigitalValueMessage.Value.Toggle);
@@ -35,21 +45,9 @@ public class WaspMessageFactoryTest {
 	}
 
 	@Test
-	public void shouldBuildHeartbeatMessageWithPrefixFromMessage() throws Exception {
-		buildMessageFrom(0xFF, 1, 'Z');
-		expectHeartbeatMessage("Z");
-	}
-
-	@Test
-	public void shouldSetSourcePrefixFromHeartbeatMessage() throws Exception {
-		buildMessageFrom(0x01, usHigh(7), usLow(7), 'H');
-		expectDigitalValueMessage("X.7", DigitalValueMessage.Value.High);
-
-		buildMessageFrom(0xFF, 1, 'Z');
-		expectHeartbeatMessage("Z");
-
-		buildMessageFrom(0x01, usHigh(7), usLow(7), 'H');
-		expectDigitalValueMessage("Z.7", DigitalValueMessage.Value.High);
+	public void shouldBuildHeartbeatMessage() throws Exception {
+		buildMessageFrom(0xFF, 4, 'N', 'a', 'm', 'e');
+		expectHeartbeatMessage("X", "Name");
 	}
 
 	@Test
@@ -100,10 +98,11 @@ public class WaspMessageFactoryTest {
 		assertEquals(value, ((AnalogValueMessage)message).getValue());
 	}
 
-	private void expectHeartbeatMessage(String source) throws Exception {
+	private void expectHeartbeatMessage(String source, String name) throws Exception {
 		assertTrue(message instanceof HeartbeatMessage);
 		assertTrue(message.getTimestamp() > 0);
 		assertEquals(source, message.getSource());
+		assertEquals(name, ((HeartbeatMessage)message).getName());
 	}
 
 	private void expectException(Exception expected) throws Exception {

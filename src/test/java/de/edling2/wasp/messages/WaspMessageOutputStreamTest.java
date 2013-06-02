@@ -73,11 +73,11 @@ public class WaspMessageOutputStreamTest {
 
 	@Test
 	public void shouldWriteHeartbeatMessage() throws Exception {
-		stream.writeMessage(new HeartbeatMessage("X"));
+		stream.writeMessage(new HeartbeatMessage("X", "Name"));
 
 		byte[] m = s.waspIn.readMessage();
 
-		assertIsMessage(m, WaspMessageFactory.MSG_HEARTBEAT, 1, 'X');
+		assertIsMessage(m, WaspMessageFactory.MSG_HEARTBEAT, 4, 'N', 'a', 'm', 'e');
 	}
 
 	private void assertIsMessage(byte[] actual, int... expectedBytes) {
