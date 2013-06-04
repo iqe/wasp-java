@@ -17,6 +17,14 @@ public class WaspMessageOutputStream {
 		this.factory = factory;
 	}
 
+	public String getSourcePrefix() {
+		return factory.getSourcePrefix();
+	}
+
+	public void setSourcePrefix(String sourcePrefix) {
+		factory.setSourcePrefix(sourcePrefix);
+	}
+
 	public void writeMessage(WaspMessage message) throws IOException {
 		byte[] bytes = factory.buildMessageBytes(message);
 		out.writeMessage(bytes);

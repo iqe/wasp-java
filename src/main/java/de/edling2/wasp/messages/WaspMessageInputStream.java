@@ -23,6 +23,14 @@ public class WaspMessageInputStream {
 		this.messageFactory = messageFactory;
 	}
 
+	public String getSourcePrefix() {
+		return messageFactory.getSourcePrefix();
+	}
+
+	public void setSourcePrefix(String sourcePrefix) {
+		messageFactory.setSourcePrefix(sourcePrefix);
+	}
+
 	public WaspMessage readMessage() throws IOException {
 		int length = input.readMessageIntoBuffer(buffer);
 		return messageFactory.buildMessage(buffer, length);
