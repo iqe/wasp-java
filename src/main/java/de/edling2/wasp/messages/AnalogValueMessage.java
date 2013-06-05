@@ -11,4 +11,9 @@ public class AnalogValueMessage extends AbstractWaspMessage {
 	public int getValue() {
 		return value;
 	}
+
+	@Override
+	public String toString() {
+		return super.toString() + ": " + getValue();
+	}
 }

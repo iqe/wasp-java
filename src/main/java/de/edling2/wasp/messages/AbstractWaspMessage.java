@@ -21,4 +21,9 @@ public abstract class AbstractWaspMessage implements WaspMessage {
 	public long getTimestamp() {
 		return timestamp;
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " '" + getSource() + "'";
+	}
 }

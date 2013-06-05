@@ -36,4 +36,9 @@ public class DigitalValueMessage extends AbstractWaspMessage {
 	public Value getValue() {
 		return value;
 	}
+
+	@Override
+	public String toString() {
+		return super.toString() + ": " + getValue();
+	}
 }
