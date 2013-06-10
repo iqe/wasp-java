@@ -6,7 +6,7 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class TestOutputStream extends OutputStream {
-
+	private boolean closed;
 	private Queue<Byte> bytes;
 
 	public TestOutputStream() {
@@ -29,5 +29,15 @@ public class TestOutputStream extends OutputStream {
 	@Override
 	public void write(int b) throws IOException {
 		bytes.add((byte)b);
+	}
+
+	@Override
+	public void close() throws IOException {
+		super.close();
+		closed = true;
+	}
+
+	public boolean isClosed() {
+		return closed;
 	}
 }

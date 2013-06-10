@@ -54,4 +54,7 @@ public class WaspOutputStream {
 		}
 	}
 
+	public void close() throws IOException {
+		out.close();
+	}
 }

@@ -98,4 +98,8 @@ public class WaspInputStream {
 
 		return ((high & 0xFF) << 8) | (low & 0xFF);
 	}
+
+	public void close() throws IOException {
+		in.close();
+	}
 }

@@ -91,6 +91,12 @@ public class WaspInputStreamTest {
 		expectException(new BufferSizeException(4));
 	}
 
+	@Test
+	public void shouldCloseUnderlyingStream() throws Exception {
+		stream.close();
+		assertTrue(inputStream.isClosed());
+	}
+
 	private void expectMessage(String s) throws Exception {
 		expectMessage(s.getBytes());
 	}

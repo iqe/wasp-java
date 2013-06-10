@@ -46,4 +46,9 @@ public class WaspMessageStream {
 	public boolean handlesMessage(WaspMessage message) {
 		return messageFactory.handlesMessage(message);
 	}
+
+	public void close() throws IOException {
+		input.close();
+		output.close();
+	}
 }

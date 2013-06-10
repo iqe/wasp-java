@@ -31,6 +31,12 @@ public class WaspOutputStreamTest {
 		expectNoMoreMessages();
 	}
 
+	@Test
+	public void shouldCloseUnderlyingStream() throws Exception {
+		stream.close();
+		assertTrue(outputStream.isClosed());
+	}
+
 	private void writeMessage(String s) throws Exception {
 		stream.writeMessage(s.getBytes());
 	}
