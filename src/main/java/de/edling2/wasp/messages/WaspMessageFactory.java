@@ -2,6 +2,8 @@ package de.edling2.wasp.messages;
 
 import de.edling2.nio.MultiSignByteBuffer;
 import de.edling2.wasp.config.PinConfig;
+import de.edling2.wasp.config.PinFlag;
+import de.edling2.wasp.config.PinMode;
 
 public class WaspMessageFactory {
 	public static final int MSG_DIGITAL_IN = 0x01;
@@ -71,7 +73,18 @@ public class WaspMessageFactory {
 
 	private PinConfigMessage buildPinConfigMessage(MultiSignByteBuffer bb) {
 		int pin = bb.getUnsignedShort();
+		int mode = bb.getUnsigned();
+		int flag = bb.getUnsigned();
+		long debounce = bb.getUnsignedInt();
+		int minValue = bb.getShort();
+		int maxValue = bb.getShort();
+
 		PinConfig config = new PinConfig();
+		config.setMode(PinMode.fromValue(mode));
+		config.getFlags().addAll(PinFlag.fromBitField(flag));
+		config.setDebounceMillis(debounce);
+		config.setAnalogMinValue(minValue);
+		config.setAnalogMaxValue(maxValue);
 
 		return new PinConfigMessage(buildSource(pin), config);
 	}

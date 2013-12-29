@@ -76,9 +76,49 @@ public class WaspMessageInputStreamTest {
 	public void shouldReadPinConfigMessage() throws Exception {
 		// Defaults: Pin 1, digital out, no flags, no debounce, analog range 0-1023
 		PinConfig config = new PinConfig();
-		addMessage(MSG_PIN_CONFIG, 0, 1, 4, 0, 0, 0, 0, 0, 0, 1023);
+		addMessage(MSG_PIN_CONFIG, 0, 1, 4, 0, 0, 0, 0, 0, 0, 0, ssHigh(1023), ssLow(1023));
 
 		WaspMessage m = stream.readMessage();
+		assertIsPinConfigMessage(m, "X.1", config);
+
+		// Different modes
+		config = new PinConfig();
+		for (PinMode mode : PinMode.values()) {
+			config.setMode(mode);
+			addMessage(MSG_PIN_CONFIG, 0, 1, mode.getValue(), 0, 0, 0, 0, 0, 0, 0, ssHigh(1023), ssLow(1023));
+
+			m = stream.readMessage();
+			assertIsPinConfigMessage(m, "X.1", config);
+		}
+
+		// Flags
+		config = new PinConfig();
+		config.getFlags().add(PinFlag.InputPullup);
+
+		addMessage(MSG_PIN_CONFIG, 0, 1, 4, 1, 0, 0, 0, 0, 0, 0, ssHigh(1023), ssLow(1023));
+		m = stream.readMessage();
+		assertIsPinConfigMessage(m, "X.1", config);
+
+		config.getFlags().add(PinFlag.Reversed);
+		addMessage(MSG_PIN_CONFIG, 0, 1, 4, 3, 0, 0, 0, 0, 0, 0, ssHigh(1023), ssLow(1023));
+		m = stream.readMessage();
+		assertIsPinConfigMessage(m, "X.1", config);
+
+		// Debounce interval
+		config = new PinConfig();
+		config.setDebounceMillis((long)Math.pow(2, 32) - 1);
+
+		addMessage(MSG_PIN_CONFIG, 0, 1, 4, 0, 255, 255, 255, 255, 0, 0, ssHigh(1023), ssLow(1023));
+		m = stream.readMessage();
+		assertIsPinConfigMessage(m, "X.1", config);
+
+		// Analog range
+		config = new PinConfig();
+		config.setAnalogMinValue(Short.MIN_VALUE);
+		config.setAnalogMaxValue(Short.MAX_VALUE);
+
+		addMessage(MSG_PIN_CONFIG, 0, 1, 4, 0, 0, 0, 0, 0, ssHigh(Short.MIN_VALUE), ssLow(Short.MIN_VALUE), ssHigh(Short.MAX_VALUE), ssLow(Short.MAX_VALUE));
+		m = stream.readMessage();
 		assertIsPinConfigMessage(m, "X.1", config);
 	}
 
