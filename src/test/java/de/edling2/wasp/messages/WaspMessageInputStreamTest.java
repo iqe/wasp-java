@@ -1,10 +1,13 @@
 package de.edling2.wasp.messages;
 
+import de.edling2.wasp.config.PinConfig;
 import de.edling2.wasp.comm.TestStream;
 import org.junit.Before;
 import org.junit.Test;
 
 import static de.edling2.wasp.comm.TestStream.*;
+import de.edling2.wasp.config.PinFlag;
+import de.edling2.wasp.config.PinMode;
 import static de.edling2.wasp.messages.WaspMessageFactory.*;
 import static org.junit.Assert.*;
 
@@ -70,6 +73,16 @@ public class WaspMessageInputStreamTest {
 	}
 
 	@Test
+	public void shouldReadPinConfigMessage() throws Exception {
+		// Defaults: Pin 1, digital out, no flags, no debounce, analog range 0-1023
+		PinConfig config = new PinConfig();
+		addMessage(MSG_PIN_CONFIG, 0, 1, 4, 0, 0, 0, 0, 0, 0, 1023);
+
+		WaspMessage m = stream.readMessage();
+		assertIsPinConfigMessage(m, "X.1", config);
+	}
+
+	@Test
 	public void shouldReadHeartbeatMessage() throws Exception {
 		addMessage(MSG_HEARTBEAT, 1, 'X');
 		WaspMessage m = stream.readMessage();
@@ -103,6 +116,15 @@ public class WaspMessageInputStreamTest {
 		DigitalMotorMessage dmMessage = (DigitalMotorMessage)message;
 		assertEquals(source, dmMessage.getSource());
 		assertEquals(direction, dmMessage.getDirection());
+	}
+
+	private void assertIsPinConfigMessage(WaspMessage message, String source, PinConfig config) {
+		assertEquals(PinConfigMessage.class, message.getClass());
+
+		PinConfigMessage pcMessage = (PinConfigMessage)message;
+
+		assertEquals(source, pcMessage.getSource());
+		assertEquals(config, pcMessage.getConfig());
 	}
 
 	private void assertIsHeartbeatMessage(WaspMessage message, String source) {

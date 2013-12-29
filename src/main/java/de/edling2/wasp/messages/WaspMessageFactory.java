@@ -1,11 +1,13 @@
 package de.edling2.wasp.messages;
 
 import de.edling2.nio.MultiSignByteBuffer;
+import de.edling2.wasp.config.PinConfig;
 
 public class WaspMessageFactory {
 	public static final int MSG_DIGITAL_IN = 0x01;
 	public static final int MSG_ANALOG_IN  = 0x02;
 	public static final int MSG_MOTOR_IN   = 0x03;
+	public static final int MSG_PIN_CONFIG = 0x10;
 	public static final int MSG_HEARTBEAT  = 0xFF;
 
 	private String sourcePrefix;
@@ -37,6 +39,8 @@ public class WaspMessageFactory {
 				return buildAnalogValueMessage(bb);
 			case MSG_MOTOR_IN:
 				return buildDigitalMotorMessage(bb);
+			case MSG_PIN_CONFIG:
+				return buildPinConfigMessage(bb);
 			case MSG_HEARTBEAT:
 				return buildHeartbeatMessage(bb);
 			default:
@@ -63,6 +67,13 @@ public class WaspMessageFactory {
 		DigitalMotorMessage.Direction direction = DigitalMotorMessage.Direction.parse((char)bb.getUnsigned());
 
 		return new DigitalMotorMessage(buildSource(pin), direction);
+	}
+
+	private PinConfigMessage buildPinConfigMessage(MultiSignByteBuffer bb) {
+		int pin = bb.getUnsignedShort();
+		PinConfig config = new PinConfig();
+
+		return new PinConfigMessage(buildSource(pin), config);
 	}
 
 	private HeartbeatMessage buildHeartbeatMessage(MultiSignByteBuffer bb) {
