@@ -9,6 +9,15 @@ public enum PinMode {
 	AnalogInTimeBased(6),
 	AnalogOut(7);
 
+	public static PinMode fromValue(int value) {
+		for (PinMode mode : values()) {
+			if (mode.getValue() == value) {
+				return mode;
+			}
+		}
+		throw new IllegalArgumentException("'" + value + "' is not a valid PinMode value");
+	}
+
 	private int value;
 
 	private PinMode(int value) {
