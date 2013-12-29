@@ -142,8 +142,8 @@ public class MultiSignByteBuffer {
 		return buf.getInt(index);
 	}
 
-	public long getUnsignedInt(MultiSignByteBuffer bb) {
-		return ((long) bb.getInt() & 0xFFFFFFFFL);
+	public long getUnsignedInt() {
+		return ((long) buf.getInt() & 0xFFFFFFFFL);
 	}
 
 	public long getUnsignedInt(int index) {
