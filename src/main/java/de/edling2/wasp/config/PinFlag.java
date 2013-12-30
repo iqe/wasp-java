@@ -18,6 +18,16 @@ public enum PinFlag {
 		return set;
 	}
 
+	public static int toBitField(EnumSet<PinFlag> set) {
+		int flags = 0;
+
+		for (PinFlag flag : set) {
+			flags |= flag.getValue();
+		}
+
+		return flags;
+	}
+
 	private int value;
 
 	private PinFlag(int value) {
