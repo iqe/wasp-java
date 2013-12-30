@@ -7,6 +7,9 @@ import de.edling2.wasp.comm.TestStream;
 import de.edling2.wasp.messages.DigitalValueMessage.Value;
 
 import static de.edling2.wasp.comm.TestStream.*;
+import de.edling2.wasp.config.PinConfig;
+import de.edling2.wasp.config.PinFlag;
+import de.edling2.wasp.config.PinMode;
 import static de.edling2.wasp.messages.WaspMessageFactory.*;
 import static org.junit.Assert.*;
 
@@ -69,6 +72,51 @@ public class WaspMessageOutputStreamTest {
 		assertIsMessage(m1, MSG_MOTOR_IN, 0x00, 0x01, 0);
 		assertIsMessage(m2, MSG_MOTOR_IN, 0x00, 0x02, 1);
 		assertIsMessage(m3, MSG_MOTOR_IN, 0x00, 0x03, 2);
+	}
+
+	@Test
+	public void shouldWritePinConfigMessage() throws Exception {
+		// Defaults: Pin 1, digital out, no flags, no debounce, analog range 0-1023
+		PinConfig config = new PinConfig();
+		stream.writeMessage(new PinConfigMessage("X.1", config));
+		byte[] m = s.waspIn.readMessage();
+		assertIsMessage(m, MSG_PIN_CONFIG, 0, 1, 4, 0, 0, 0, 0, 0, 0, 0, ssHigh(1023), ssLow(1023));
+
+		// Different modes
+		config = new PinConfig();
+		for (PinMode mode : PinMode.values()) {
+			config.setMode(mode);
+			stream.writeMessage(new PinConfigMessage("X.1", config));
+			m = s.waspIn.readMessage();
+			assertIsMessage(m, MSG_PIN_CONFIG, 0, 1, mode.getValue(), 0, 0, 0, 0, 0, 0, 0, ssHigh(1023), ssLow(1023));
+		}
+
+		// Flags
+		config = new PinConfig();
+		config.getFlags().add(PinFlag.InputPullup);
+		stream.writeMessage(new PinConfigMessage("X.1", config));
+		m = s.waspIn.readMessage();
+		assertIsMessage(m, MSG_PIN_CONFIG, 0, 1, 4, 1, 0, 0, 0, 0, 0, 0, ssHigh(1023), ssLow(1023));
+
+		config.getFlags().add(PinFlag.Reversed);
+		stream.writeMessage(new PinConfigMessage("X.1", config));
+		m = s.waspIn.readMessage();
+		assertIsMessage(m, MSG_PIN_CONFIG, 0, 1, 4, 3, 0, 0, 0, 0, 0, 0, ssHigh(1023), ssLow(1023));
+
+		// Debounce interval
+		config = new PinConfig();
+		config.setDebounceMillis((long)Math.pow(2, 32) - 1);
+		stream.writeMessage(new PinConfigMessage("X.1", config));
+		m = s.waspIn.readMessage();
+		assertIsMessage(m, MSG_PIN_CONFIG, 0, 1, 4, 0, 255, 255, 255, 255, 0, 0, ssHigh(1023), ssLow(1023));
+
+		// Analog range
+		config = new PinConfig();
+		config.setAnalogMinValue(Short.MIN_VALUE);
+		config.setAnalogMaxValue(Short.MAX_VALUE);
+		stream.writeMessage(new PinConfigMessage("X.1", config));
+		m = s.waspIn.readMessage();
+		assertIsMessage(m, MSG_PIN_CONFIG, 0, 1, 4, 0, 0, 0, 0, 0, ssHigh(Short.MIN_VALUE), ssLow(Short.MIN_VALUE), ssHigh(Short.MAX_VALUE), ssLow(Short.MAX_VALUE));
 	}
 
 	@Test

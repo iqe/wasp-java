@@ -116,6 +116,9 @@ public class WaspMessageFactory {
 		if (message instanceof DigitalMotorMessage) {
 			return buildDigitalMotorMessageBytes((DigitalMotorMessage)message);
 		}
+		if (message instanceof PinConfigMessage) {
+			return buildPinConfigMessageBytes((PinConfigMessage)message);
+		}
 		if (message instanceof HeartbeatMessage) {
 			return buildHeartbeatMessageBytes((HeartbeatMessage)message);
 		}
@@ -152,6 +155,23 @@ public class WaspMessageFactory {
 		bb.putUnsigned(MSG_MOTOR_IN);
 		bb.putUnsignedShort(parsePin(message.getSource()));
 		bb.putUnsigned(message.getDirection().getValue());
+
+		return bytes;
+	}
+
+	private byte[] buildPinConfigMessageBytes(PinConfigMessage message) {
+		byte[] bytes = new byte[13];
+		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
+
+		final PinConfig config = message.getConfig();
+
+		bb.putUnsigned(MSG_PIN_CONFIG);
+		bb.putUnsignedShort(parsePin(message.getSource()));
+		bb.putUnsigned(config.getMode().getValue());
+		bb.putUnsigned(PinFlag.toBitField(config.getFlags()));
+		bb.putUnsignedInt(config.getDebounceMillis());
+		bb.putShort((short)config.getAnalogMinValue());
+		bb.putShort((short)config.getAnalogMaxValue());
 
 		return bytes;
 	}
