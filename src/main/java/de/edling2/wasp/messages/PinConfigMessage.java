@@ -13,4 +13,9 @@ public class PinConfigMessage extends AbstractWaspMessage {
 	public PinConfig getConfig() {
 		return config;
 	}
+
+	@Override
+	public String toString() {
+		return super.toString() + ": " + config.toString();
+	}
 }

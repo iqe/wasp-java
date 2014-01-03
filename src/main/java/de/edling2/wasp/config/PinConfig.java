@@ -96,6 +96,6 @@ public class PinConfig {
 
 	@Override
 	public String toString() {
-		return String.format("PinConfig[%s, (debounce) interval %dms, range %d-%d, flags %s]", mode, debounceMillis, analogMinValue, analogMaxValue, flags);
+		return String.format("%s, (debounce) interval %dms, range %d-%d, flags %s", mode, debounceMillis, analogMinValue, analogMaxValue, flags);
 	}
 }
