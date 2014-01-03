@@ -28,6 +28,7 @@ public class WaspOutputStream {
 		writeContent(bytes);
 		writeCrc(bytes);
 		out.write(EFLAG);
+		out.flush();
 	}
 
 	private void writeCrc(byte[] bytes) throws IOException {
