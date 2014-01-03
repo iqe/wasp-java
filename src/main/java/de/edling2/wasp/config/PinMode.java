@@ -1,6 +1,7 @@
 package de.edling2.wasp.config;
 
 public enum PinMode {
+	Disabled(0),
 	DigitalInSwitch(1),
 	DigitalInButtonPress(2),
 	DigitalInButtonRelease(3),
