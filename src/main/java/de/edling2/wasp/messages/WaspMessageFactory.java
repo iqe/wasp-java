@@ -163,7 +163,7 @@ public class WaspMessageFactory {
 		byte[] bytes = new byte[13];
 		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
 
-		final PinConfig config = message.getConfig();
+		PinConfig config = message.getConfig();
 
 		bb.putUnsigned(MSG_PIN_CONFIG);
 		bb.putUnsignedShort(parsePin(message.getSource()));
