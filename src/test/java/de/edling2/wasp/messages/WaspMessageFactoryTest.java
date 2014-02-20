@@ -61,13 +61,13 @@ public class WaspMessageFactoryTest {
 		try {
 			factory.buildMessageBytes(new DigitalValueMessage("Bad Subject", DigitalValueMessage.Value.High));
 		} catch (Exception e) {
-			assertEquals("'Bad Subject' is no valid message subject", e.getMessage());
+			assertEquals("'Bad Subject' is not a valid message subject", e.getMessage());
 		}
 
 		try {
 			factory.buildMessageBytes(new DigitalValueMessage("", DigitalValueMessage.Value.High));
 		} catch (Exception e) {
-			assertEquals("'' is no valid message subject", e.getMessage());
+			assertEquals("'' is not a valid message subject", e.getMessage());
 		}
 	}
 
