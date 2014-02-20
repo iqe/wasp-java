@@ -58,21 +58,6 @@ public class WaspMessageInputStreamTest {
 	}
 
 	@Test
-	public void shouldReadDigitalMotorMessage() throws Exception {
-		addMessage(MSG_MOTOR_IN, usHigh(1), usLow(1), 0);
-		addMessage(MSG_MOTOR_IN, usHigh(2), usLow(2), 1);
-		addMessage(MSG_MOTOR_IN, usHigh(3), usLow(3), 2);
-
-		WaspMessage m1 = stream.readMessage();
-		WaspMessage m2 = stream.readMessage();
-		WaspMessage m3 = stream.readMessage();
-
-		assertIsDigitalMotorMessage(m1, "X.1", DigitalMotorMessage.Direction.Stop);
-		assertIsDigitalMotorMessage(m2, "X.2", DigitalMotorMessage.Direction.Forward);
-		assertIsDigitalMotorMessage(m3, "X.3", DigitalMotorMessage.Direction.Reverse);
-	}
-
-	@Test
 	public void shouldReadPinConfigMessage() throws Exception {
 		// Defaults: Pin 1, digital out, no flags, no debounce, analog range 0-1023
 		PinConfig config = new PinConfig();
@@ -148,14 +133,6 @@ public class WaspMessageInputStreamTest {
 		AnalogValueMessage avMessage = (AnalogValueMessage)message;
 		assertEquals(source, avMessage.getSource());
 		assertEquals(value, avMessage.getValue());
-	}
-
-	private void assertIsDigitalMotorMessage(WaspMessage message, String source, DigitalMotorMessage.Direction direction) {
-		assertEquals(DigitalMotorMessage.class, message.getClass());
-
-		DigitalMotorMessage dmMessage = (DigitalMotorMessage)message;
-		assertEquals(source, dmMessage.getSource());
-		assertEquals(direction, dmMessage.getDirection());
 	}
 
 	private void assertIsPinConfigMessage(WaspMessage message, String source, PinConfig config) {

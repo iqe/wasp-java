@@ -8,7 +8,6 @@ import de.edling2.wasp.config.PinMode;
 public class WaspMessageFactory {
 	public static final int MSG_DIGITAL_IN = 0x01;
 	public static final int MSG_ANALOG_IN  = 0x02;
-	public static final int MSG_MOTOR_IN   = 0x03;
 	public static final int MSG_PIN_CONFIG = 0x10;
 	public static final int MSG_HEARTBEAT  = 0xFF;
 
@@ -39,8 +38,6 @@ public class WaspMessageFactory {
 				return buildDigitalValueMessage(bb);
 			case MSG_ANALOG_IN:
 				return buildAnalogValueMessage(bb);
-			case MSG_MOTOR_IN:
-				return buildDigitalMotorMessage(bb);
 			case MSG_PIN_CONFIG:
 				return buildPinConfigMessage(bb);
 			case MSG_HEARTBEAT:
@@ -62,13 +59,6 @@ public class WaspMessageFactory {
 		int value = bb.getShort();
 
 		return new AnalogValueMessage(buildSource(pin), value);
-	}
-
-	private WaspMessage buildDigitalMotorMessage(MultiSignByteBuffer bb) {
-		int pin = bb.getUnsignedShort();
-		DigitalMotorMessage.Direction direction = DigitalMotorMessage.Direction.parse((char)bb.getUnsigned());
-
-		return new DigitalMotorMessage(buildSource(pin), direction);
 	}
 
 	private PinConfigMessage buildPinConfigMessage(MultiSignByteBuffer bb) {
@@ -113,9 +103,6 @@ public class WaspMessageFactory {
 		if (message instanceof AnalogValueMessage) {
 			return buildAnalogValueMessageBytes((AnalogValueMessage)message);
 		}
-		if (message instanceof DigitalMotorMessage) {
-			return buildDigitalMotorMessageBytes((DigitalMotorMessage)message);
-		}
 		if (message instanceof PinConfigMessage) {
 			return buildPinConfigMessageBytes((PinConfigMessage)message);
 		}
@@ -144,17 +131,6 @@ public class WaspMessageFactory {
 		bb.putUnsigned(MSG_ANALOG_IN);
 		bb.putUnsignedShort(parsePin(message.getSource()));
 		bb.putShort((short)message.getValue());
-
-		return bytes;
-	}
-
-	private byte[] buildDigitalMotorMessageBytes(DigitalMotorMessage message) {
-		byte[] bytes = new byte[4];
-		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
-
-		bb.putUnsigned(MSG_MOTOR_IN);
-		bb.putUnsignedShort(parsePin(message.getSource()));
-		bb.putUnsigned(message.getDirection().getValue());
 
 		return bytes;
 	}

@@ -60,21 +60,6 @@ public class WaspMessageOutputStreamTest {
 	}
 
 	@Test
-	public void shouldWriteDigitalMotorMessage() throws Exception {
-		stream.writeMessage(new DigitalMotorMessage("X.1", DigitalMotorMessage.Direction.Stop));
-		stream.writeMessage(new DigitalMotorMessage("X.2", DigitalMotorMessage.Direction.Forward));
-		stream.writeMessage(new DigitalMotorMessage("X.3", DigitalMotorMessage.Direction.Reverse));
-
-		byte[] m1 = s.waspIn.readMessage();
-		byte[] m2 = s.waspIn.readMessage();
-		byte[] m3 = s.waspIn.readMessage();
-
-		assertIsMessage(m1, MSG_MOTOR_IN, 0x00, 0x01, 0);
-		assertIsMessage(m2, MSG_MOTOR_IN, 0x00, 0x02, 1);
-		assertIsMessage(m3, MSG_MOTOR_IN, 0x00, 0x03, 2);
-	}
-
-	@Test
 	public void shouldWritePinConfigMessage() throws Exception {
 		// Defaults: Pin 1, digital out, no flags, no debounce, analog range 0-1023
 		PinConfig config = new PinConfig();
