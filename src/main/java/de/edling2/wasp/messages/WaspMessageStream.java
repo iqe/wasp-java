@@ -2,9 +2,10 @@ package de.edling2.wasp.messages;
 
 import de.edling2.wasp.comm.WaspInputStream;
 import de.edling2.wasp.comm.WaspOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 
-public class WaspMessageStream {
+public class WaspMessageStream implements Closeable {
 	private WaspInputStream input;
 	private WaspOutputStream output;
 	private WaspMessageFactory messageFactory;
@@ -47,6 +48,7 @@ public class WaspMessageStream {
 		return messageFactory.handlesMessage(message);
 	}
 
+	@Override
 	public void close() throws IOException {
 		input.close();
 		output.close();

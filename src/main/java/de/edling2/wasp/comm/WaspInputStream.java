@@ -1,6 +1,7 @@
 package de.edling2.wasp.comm;
 
 import static de.edling2.wasp.comm.WaspStream.*;
+import java.io.Closeable;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -11,7 +12,7 @@ import java.util.Arrays;
 import jonelo.jacksum.JacksumAPI;
 import jonelo.jacksum.algorithm.AbstractChecksum;
 
-public class WaspInputStream {
+public class WaspInputStream implements Closeable {
 	private InputStream in;
 	private AbstractChecksum crc;
 
@@ -99,6 +100,7 @@ public class WaspInputStream {
 		return ((high & 0xFF) << 8) | (low & 0xFF);
 	}
 
+	@Override
 	public void close() throws IOException {
 		in.close();
 	}
