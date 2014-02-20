@@ -9,12 +9,12 @@ public class WaspMessageInputStream {
 	private WaspMessageFactory messageFactory;
 	private byte[] buffer;
 
-	public WaspMessageInputStream(WaspInputStream input, String sourcePrefix) {
-		this(input, new byte[1024], sourcePrefix);
+	public WaspMessageInputStream(WaspInputStream input, String subjectPrefix) {
+		this(input, new byte[1024], subjectPrefix);
 	}
 
-	public WaspMessageInputStream(WaspInputStream input, byte[] buffer, String sourcePrefix) {
-		this(input, buffer, new WaspMessageFactory(sourcePrefix));
+	public WaspMessageInputStream(WaspInputStream input, byte[] buffer, String subjectPrefix) {
+		this(input, buffer, new WaspMessageFactory(subjectPrefix));
 	}
 
 	public WaspMessageInputStream(WaspInputStream input, byte[] buffer, WaspMessageFactory messageFactory) {
@@ -23,12 +23,12 @@ public class WaspMessageInputStream {
 		this.messageFactory = messageFactory;
 	}
 
-	public String getSourcePrefix() {
-		return messageFactory.getSourcePrefix();
+	public String getSubjectPrefix() {
+		return messageFactory.getSubjectPrefix();
 	}
 
-	public void setSourcePrefix(String sourcePrefix) {
-		messageFactory.setSourcePrefix(sourcePrefix);
+	public void setSubjectPrefix(String subjectPrefix) {
+		messageFactory.setSubjectPrefix(subjectPrefix);
 	}
 
 	public WaspMessage readMessage() throws IOException {

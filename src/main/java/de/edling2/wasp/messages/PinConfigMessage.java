@@ -5,8 +5,8 @@ import de.edling2.wasp.config.PinConfig;
 public class PinConfigMessage extends AbstractWaspMessage {
 	private PinConfig config;
 
-	public PinConfigMessage(String source, PinConfig config) {
-		super(source);
+	public PinConfigMessage(String subject, PinConfig config) {
+		super(subject);
 		this.config = config;
 	}
 

@@ -11,22 +11,22 @@ public class WaspMessageFactory {
 	public static final int MSG_PIN_CONFIG = 0x10;
 	public static final int MSG_HEARTBEAT  = 0xFF;
 
-	private String sourcePrefix;
+	private String subjectPrefix;
 
 	public WaspMessageFactory() {
-		this.sourcePrefix = "W" + hashCode();
+		this.subjectPrefix = "W" + hashCode();
 	}
 
-	public WaspMessageFactory(String sourcePrefix) {
-		this.sourcePrefix = sourcePrefix;
+	public WaspMessageFactory(String subjectPrefix) {
+		this.subjectPrefix = subjectPrefix;
 	}
 
-	public String getSourcePrefix() {
-		return sourcePrefix;
+	public String getSubjectPrefix() {
+		return subjectPrefix;
 	}
 
-	public void setSourcePrefix(String sourcePrefix) {
-		this.sourcePrefix = sourcePrefix;
+	public void setSubjectPrefix(String subjectPrefix) {
+		this.subjectPrefix = subjectPrefix;
 	}
 
 	public WaspMessage buildMessage(byte[] buffer, int byteCount) {
@@ -51,14 +51,14 @@ public class WaspMessageFactory {
 		int pin = bb.getUnsignedShort();
 		DigitalValueMessage.Value value = DigitalValueMessage.Value.parse((char)bb.get());
 
-		return new DigitalValueMessage(buildSource(pin), value);
+		return new DigitalValueMessage(buildSubject(pin), value);
 	}
 
 	private AnalogValueMessage buildAnalogValueMessage(MultiSignByteBuffer bb) {
 		int pin = bb.getUnsignedShort();
 		int value = bb.getShort();
 
-		return new AnalogValueMessage(buildSource(pin), value);
+		return new AnalogValueMessage(buildSubject(pin), value);
 	}
 
 	private PinConfigMessage buildPinConfigMessage(MultiSignByteBuffer bb) {
@@ -76,7 +76,7 @@ public class WaspMessageFactory {
 		config.setAnalogMinValue(minValue);
 		config.setAnalogMaxValue(maxValue);
 
-		return new PinConfigMessage(buildSource(pin), config);
+		return new PinConfigMessage(buildSubject(pin), config);
 	}
 
 	private HeartbeatMessage buildHeartbeatMessage(MultiSignByteBuffer bb) {
@@ -85,15 +85,15 @@ public class WaspMessageFactory {
 		for (int i = 0; i < length; i++) {
 			name.append((char)bb.get());
 		}
-		return new HeartbeatMessage(sourcePrefix, name.toString());
+		return new HeartbeatMessage(subjectPrefix, name.toString());
 	}
 
-	private String buildSource(int pin) {
-		return sourcePrefix + "." + pin;
+	private String buildSubject(int pin) {
+		return subjectPrefix + "." + pin;
 	}
 
 	public boolean handlesMessage(WaspMessage message) {
-		return message.getSource().matches(sourcePrefix + "\\.\\d+");
+		return message.getSubject().matches(subjectPrefix + "\\.\\d+");
 	}
 
 	public byte[] buildMessageBytes(WaspMessage message) {
@@ -118,7 +118,7 @@ public class WaspMessageFactory {
 		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
 
 		bb.putUnsigned(MSG_DIGITAL_IN);
-		bb.putUnsignedShort(parsePin(message.getSource()));
+		bb.putUnsignedShort(parsePin(message.getSubject()));
 		bb.put((byte)message.getValue().getChar());
 
 		return bytes;
@@ -129,7 +129,7 @@ public class WaspMessageFactory {
 		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
 
 		bb.putUnsigned(MSG_ANALOG_IN);
-		bb.putUnsignedShort(parsePin(message.getSource()));
+		bb.putUnsignedShort(parsePin(message.getSubject()));
 		bb.putShort((short)message.getValue());
 
 		return bytes;
@@ -142,7 +142,7 @@ public class WaspMessageFactory {
 		PinConfig config = message.getConfig();
 
 		bb.putUnsigned(MSG_PIN_CONFIG);
-		bb.putUnsignedShort(parsePin(message.getSource()));
+		bb.putUnsignedShort(parsePin(message.getSubject()));
 		bb.putUnsigned(config.getMode().getValue());
 		bb.putUnsigned(PinFlag.toBitField(config.getFlags()));
 		bb.putUnsignedInt(config.getDebounceMillis());
@@ -164,14 +164,14 @@ public class WaspMessageFactory {
 		return messageBytes;
 	}
 
-	private int parsePin(String source) {
+	private int parsePin(String subject) {
 		try {
-			String s = source.substring(sourcePrefix.length() + 1);
+			String s = subject.substring(subjectPrefix.length() + 1);
 			return Integer.parseInt(s);
 		} catch (IndexOutOfBoundsException e) {
-			throw new InvalidSubjectException(source);
+			throw new InvalidSubjectException(subject);
 		} catch (NumberFormatException e) {
-			throw new InvalidSubjectException(source);
+			throw new InvalidSubjectException(subject);
 		}
 	}
 }

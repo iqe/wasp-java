@@ -17,17 +17,17 @@ public class WaspMessageFactoryTest {
 	}
 
 	@Test
-	public void shouldSetSourcePrefixToHashCode() throws Exception {
+	public void shouldSetSubjectPrefixToHashCode() throws Exception {
 		factory = new WaspMessageFactory();
-		assertEquals("W" + factory.hashCode(), factory.getSourcePrefix());
+		assertEquals("W" + factory.hashCode(), factory.getSubjectPrefix());
 	}
 
 	@Test
-	public void shouldUseGivenSourcePrefix() throws Exception {
+	public void shouldUseGivenSubjectPrefix() throws Exception {
 		buildMessageFrom(0x01, usHigh(7), usLow(7), 'H');
 		expectDigitalValueMessage("X.7", DigitalValueMessage.Value.High);
 
-		factory.setSourcePrefix("Z");
+		factory.setSubjectPrefix("Z");
 		buildMessageFrom(0x01, usHigh(7), usLow(7), 'H');
 		expectDigitalValueMessage("Z.7", DigitalValueMessage.Value.High);
 	}
@@ -59,9 +59,9 @@ public class WaspMessageFactoryTest {
 	@Test
 	public void shouldThrowInvalidSubjectException() throws Exception {
 		try {
-			factory.buildMessageBytes(new DigitalValueMessage("Bad Source", DigitalValueMessage.Value.High));
+			factory.buildMessageBytes(new DigitalValueMessage("Bad Subject", DigitalValueMessage.Value.High));
 		} catch (Exception e) {
-			assertEquals("'Bad Source' is no valid message subject", e.getMessage());
+			assertEquals("'Bad Subject' is no valid message subject", e.getMessage());
 		}
 
 		try {
@@ -84,24 +84,24 @@ public class WaspMessageFactoryTest {
 		message = factory.buildMessage(messageBytes, messageBytes.length);
 	}
 
-	private void expectDigitalValueMessage(String source, DigitalValueMessage.Value value) throws Exception {
+	private void expectDigitalValueMessage(String subject, DigitalValueMessage.Value value) throws Exception {
 		assertTrue(message instanceof DigitalValueMessage);
 		assertTrue(message.getTimestamp() > 0);
-		assertEquals(source, message.getSource());
+		assertEquals(subject, message.getSubject());
 		assertEquals(value, ((DigitalValueMessage)message).getValue());
 	}
 
-	private void expectAnalogValueMessage(String source, int value) throws Exception {
+	private void expectAnalogValueMessage(String subject, int value) throws Exception {
 		assertTrue(message instanceof AnalogValueMessage);
 		assertTrue(message.getTimestamp() > 0);
-		assertEquals(source, message.getSource());
+		assertEquals(subject, message.getSubject());
 		assertEquals(value, ((AnalogValueMessage)message).getValue());
 	}
 
-	private void expectHeartbeatMessage(String source, String name) throws Exception {
+	private void expectHeartbeatMessage(String subject, String name) throws Exception {
 		assertTrue(message instanceof HeartbeatMessage);
 		assertTrue(message.getTimestamp() > 0);
-		assertEquals(source, message.getSource());
+		assertEquals(subject, message.getSubject());
 		assertEquals(name, ((HeartbeatMessage)message).getName());
 	}
 

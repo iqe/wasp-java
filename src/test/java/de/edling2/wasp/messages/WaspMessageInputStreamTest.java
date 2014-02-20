@@ -119,33 +119,33 @@ public class WaspMessageInputStreamTest {
 		s.waspOut.writeMessage(bytes);
 	}
 
-	private void assertIsDigitalValueMessage(WaspMessage message, String source, DigitalValueMessage.Value value) {
+	private void assertIsDigitalValueMessage(WaspMessage message, String subject, DigitalValueMessage.Value value) {
 		assertEquals(DigitalValueMessage.class, message.getClass());
 
 		DigitalValueMessage dvMessage = (DigitalValueMessage)message;
-		assertEquals(source, dvMessage.getSource());
+		assertEquals(subject, dvMessage.getSubject());
 		assertEquals(value, dvMessage.getValue());
 	}
 
-	private void assertIsAnalogValueMessage(WaspMessage message, String source, int value) {
+	private void assertIsAnalogValueMessage(WaspMessage message, String subject, int value) {
 		assertEquals(AnalogValueMessage.class, message.getClass());
 
 		AnalogValueMessage avMessage = (AnalogValueMessage)message;
-		assertEquals(source, avMessage.getSource());
+		assertEquals(subject, avMessage.getSubject());
 		assertEquals(value, avMessage.getValue());
 	}
 
-	private void assertIsPinConfigMessage(WaspMessage message, String source, PinConfig config) {
+	private void assertIsPinConfigMessage(WaspMessage message, String subject, PinConfig config) {
 		assertEquals(PinConfigMessage.class, message.getClass());
 
 		PinConfigMessage pcMessage = (PinConfigMessage)message;
 
-		assertEquals(source, pcMessage.getSource());
+		assertEquals(subject, pcMessage.getSubject());
 		assertEquals(config, pcMessage.getConfig());
 	}
 
-	private void assertIsHeartbeatMessage(WaspMessage message, String source) {
+	private void assertIsHeartbeatMessage(WaspMessage message, String subject) {
 		assertEquals(HeartbeatMessage.class, message.getClass());
-		assertEquals(source, message.getSource());
+		assertEquals(subject, message.getSubject());
 	}
 }

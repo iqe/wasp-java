@@ -8,8 +8,8 @@ public class WaspMessageOutputStream {
 	private WaspOutputStream out;
 	private WaspMessageFactory factory;
 
-	public WaspMessageOutputStream(WaspOutputStream out, String sourcePrefix) {
-		this(out, new WaspMessageFactory(sourcePrefix));
+	public WaspMessageOutputStream(WaspOutputStream out, String subjectPrefix) {
+		this(out, new WaspMessageFactory(subjectPrefix));
 	}
 
 	public WaspMessageOutputStream(WaspOutputStream out, WaspMessageFactory factory) {
@@ -17,12 +17,12 @@ public class WaspMessageOutputStream {
 		this.factory = factory;
 	}
 
-	public String getSourcePrefix() {
-		return factory.getSourcePrefix();
+	public String getSubjectPrefix() {
+		return factory.getSubjectPrefix();
 	}
 
-	public void setSourcePrefix(String sourcePrefix) {
-		factory.setSourcePrefix(sourcePrefix);
+	public void setSubjectPrefix(String subjectPrefix) {
+		factory.setSubjectPrefix(subjectPrefix);
 	}
 
 	public void writeMessage(WaspMessage message) throws IOException {

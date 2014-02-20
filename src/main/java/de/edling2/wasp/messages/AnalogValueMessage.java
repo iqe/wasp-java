@@ -3,8 +3,8 @@ package de.edling2.wasp.messages;
 public class AnalogValueMessage extends AbstractWaspMessage {
 	private int value;
 
-	public AnalogValueMessage(String source, int value) {
-		super(source);
+	public AnalogValueMessage(String subject, int value) {
+		super(subject);
 		this.value = value;
 	}
 

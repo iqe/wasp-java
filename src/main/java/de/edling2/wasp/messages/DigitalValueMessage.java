@@ -28,8 +28,8 @@ public class DigitalValueMessage extends AbstractWaspMessage {
 
 	private Value value;
 
-	public DigitalValueMessage(String source, Value value) {
-		super(source);
+	public DigitalValueMessage(String subject, Value value) {
+		super(subject);
 		this.value = value;
 	}
 

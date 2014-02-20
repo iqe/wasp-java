@@ -1,6 +1,6 @@
 package de.edling2.wasp.messages;
 
 public interface WaspMessage {
-	String getSource();
+	String getSubject();
 	long getTimestamp();
 }

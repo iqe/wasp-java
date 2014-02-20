@@ -11,12 +11,12 @@ public class WaspMessageStream implements Closeable {
 	private WaspMessageFactory messageFactory;
 	private byte[] buffer;
 
-	public WaspMessageStream(WaspInputStream input, WaspOutputStream output, String sourcePrefix) {
-		this(input, new byte[1024], output, sourcePrefix);
+	public WaspMessageStream(WaspInputStream input, WaspOutputStream output, String subjectPrefix) {
+		this(input, new byte[1024], output, subjectPrefix);
 	}
 
-	public WaspMessageStream(WaspInputStream input, byte[] inputBuffer, WaspOutputStream output, String sourcePrefix) {
-		this(input, inputBuffer, output, new WaspMessageFactory(sourcePrefix));
+	public WaspMessageStream(WaspInputStream input, byte[] inputBuffer, WaspOutputStream output, String subjectPrefix) {
+		this(input, inputBuffer, output, new WaspMessageFactory(subjectPrefix));
 	}
 
 	public WaspMessageStream(WaspInputStream input, byte[] inputBuffer, WaspOutputStream output, WaspMessageFactory messageFactory) {
@@ -26,12 +26,12 @@ public class WaspMessageStream implements Closeable {
 		this.messageFactory = messageFactory;
 	}
 
-	public String getSourcePrefix() {
-		return messageFactory.getSourcePrefix();
+	public String getSubjectPrefix() {
+		return messageFactory.getSubjectPrefix();
 	}
 
-	public void setSourcePrefix(String sourcePrefix) {
-		messageFactory.setSourcePrefix(sourcePrefix);
+	public void setSubjectPrefix(String subjectPrefix) {
+		messageFactory.setSubjectPrefix(subjectPrefix);
 	}
 
 	public WaspMessage readMessage() throws IOException {

@@ -2,20 +2,20 @@ package de.edling2.wasp.messages;
 
 
 public abstract class AbstractWaspMessage implements WaspMessage {
-	private String source;
+	private String subject;
 	private long timestamp;
 
-	public AbstractWaspMessage(String source) {
-		this(source, System.currentTimeMillis());
+	public AbstractWaspMessage(String subject) {
+		this(subject, System.currentTimeMillis());
 	}
 
-	public AbstractWaspMessage(String source, long timestamp) {
+	public AbstractWaspMessage(String subject, long timestamp) {
 		this.timestamp = timestamp;
-		this.source = source;
+		this.subject = subject;
 	}
 
-	public String getSource() {
-		return source;
+	public String getSubject() {
+		return subject;
 	}
 
 	public long getTimestamp() {
@@ -24,6 +24,6 @@ public abstract class AbstractWaspMessage implements WaspMessage {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " '" + getSource() + "'";
+		return getClass().getSimpleName() + " '" + getSubject() + "'";
 	}
 }
