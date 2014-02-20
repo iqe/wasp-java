@@ -8,6 +8,8 @@ public class WaspStream {
 
 	public static final String CRC_ALGORITHM = "crc:16,1021,FFFF,false,false,0"; // CCITT
 
+	public static final int DEFAULT_BUFFER_SIZE = 1024;
+
 	private WaspStream() {
 	}
 }

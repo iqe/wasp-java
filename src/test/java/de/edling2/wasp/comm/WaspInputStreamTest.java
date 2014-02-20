@@ -19,7 +19,7 @@ public class WaspInputStreamTest {
 	public void setUp() {
 		inputStream = new TestInputStream();
 		stream = new WaspInputStream(inputStream);
-		buffer = new byte[1024];
+		buffer = new byte[DEFAULT_BUFFER_SIZE];
 	}
 
 	@Test

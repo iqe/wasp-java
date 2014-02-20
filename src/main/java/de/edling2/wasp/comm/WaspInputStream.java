@@ -27,7 +27,7 @@ public class WaspInputStream implements Closeable {
 	}
 
 	public byte[] readMessage() throws IOException {
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 		int byteCount = readMessageIntoBuffer(buffer);
 
 		return Arrays.copyOf(buffer, byteCount);

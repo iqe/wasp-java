@@ -2,6 +2,7 @@ package de.edling2.wasp.messages;
 
 import de.edling2.wasp.comm.WaspInputStream;
 import de.edling2.wasp.comm.WaspOutputStream;
+import de.edling2.wasp.comm.WaspStream;
 import java.io.Closeable;
 import java.io.IOException;
 
@@ -12,7 +13,7 @@ public class WaspMessageStream implements Closeable {
 	private byte[] buffer;
 
 	public WaspMessageStream(WaspInputStream input, WaspOutputStream output, String subjectPrefix) {
-		this(input, new byte[1024], output, subjectPrefix);
+		this(input, new byte[WaspStream.DEFAULT_BUFFER_SIZE], output, subjectPrefix);
 	}
 
 	public WaspMessageStream(WaspInputStream input, byte[] inputBuffer, WaspOutputStream output, String subjectPrefix) {

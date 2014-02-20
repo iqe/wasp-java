@@ -3,6 +3,7 @@ package de.edling2.wasp.messages;
 import java.io.IOException;
 
 import de.edling2.wasp.comm.WaspInputStream;
+import de.edling2.wasp.comm.WaspStream;
 
 public class WaspMessageInputStream {
 	private WaspInputStream input;
@@ -10,7 +11,7 @@ public class WaspMessageInputStream {
 	private byte[] buffer;
 
 	public WaspMessageInputStream(WaspInputStream input, String subjectPrefix) {
-		this(input, new byte[1024], subjectPrefix);
+		this(input, new byte[WaspStream.DEFAULT_BUFFER_SIZE], subjectPrefix);
 	}
 
 	public WaspMessageInputStream(WaspInputStream input, byte[] buffer, String subjectPrefix) {
