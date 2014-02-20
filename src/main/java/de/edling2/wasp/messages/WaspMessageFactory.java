@@ -5,6 +5,13 @@ import de.edling2.wasp.config.PinConfig;
 import de.edling2.wasp.config.PinFlag;
 import de.edling2.wasp.config.PinMode;
 
+/**
+ * Factory for marshalling/unmarshalling {@link WaspMessage}s to/from a byte
+ * stream.
+ *
+ * This factory uses a subject format of {@code subjectPrefix + "." + <pin number>}
+ * for its messages.
+ */
 public class WaspMessageFactory {
 	public static final int MSG_DIGITAL_IN = 0x01;
 	public static final int MSG_ANALOG_IN  = 0x02;

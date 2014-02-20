@@ -6,6 +6,12 @@ import de.edling2.wasp.comm.WaspStream;
 import java.io.Closeable;
 import java.io.IOException;
 
+/**
+ * Convenience wrapper around {@link WaspInputStream} and {@link WaspOutputStream}.
+ *
+ * This is an alternative to using a separate {@link WaspMessageInputStream} and
+ * {@link WaspMessageOutputStream}.
+ */
 public class WaspMessageStream implements Closeable {
 	private WaspInputStream input;
 	private WaspOutputStream output;

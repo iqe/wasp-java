@@ -10,6 +10,12 @@ import java.security.NoSuchAlgorithmException;
 import jonelo.jacksum.JacksumAPI;
 import jonelo.jacksum.algorithm.AbstractChecksum;
 
+/**
+ * Low-level wrapper around an {@link OutputStream}.
+ *
+ * This stream encloses a payload into the necessary wasp message bytes,
+ * escapes illegal values and adds the message checksum.
+ */
 public class WaspOutputStream implements Closeable {
 	private OutputStream out;
 	private AbstractChecksum crc;

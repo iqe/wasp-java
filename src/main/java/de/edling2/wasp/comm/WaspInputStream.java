@@ -12,6 +12,12 @@ import java.util.Arrays;
 import jonelo.jacksum.JacksumAPI;
 import jonelo.jacksum.algorithm.AbstractChecksum;
 
+/**
+ * Low-level wrapper around an {@link InputStream}.
+ *
+ * This stream extracts message payloads from the underlying stream and
+ * validates message checksums.
+ */
 public class WaspInputStream implements Closeable {
 	private InputStream in;
 	private AbstractChecksum crc;
@@ -26,6 +32,15 @@ public class WaspInputStream implements Closeable {
 		}
 	}
 
+	/**
+	 * Reads the next message into a new byte array.
+	 *
+	 * Messages larger than {@link #DEFAULT_BUFFER_SIZE} are not supported by
+	 * this method.
+	 *
+	 * You should therefore use {@link #readMessageIntoBuffer(byte[])} which
+	 * allows you to reuse a message buffer and define its size yourself.
+	 */
 	public byte[] readMessage() throws IOException {
 		byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 		int byteCount = readMessageIntoBuffer(buffer);
@@ -33,6 +48,12 @@ public class WaspInputStream implements Closeable {
 		return Arrays.copyOf(buffer, byteCount);
 	}
 
+	/**
+	 * Reads the next message into the given {@code buffer}.
+	 *
+	 * @return the size of the message payload
+	 * @throws IOException if the stream is closed before a message arrives
+	 */
 	public int readMessageIntoBuffer(byte[] buffer) throws IOException {
 		int b, byteCount = 0;
 		boolean inMessage = false, afterEsc = false;

@@ -3,6 +3,9 @@ package de.edling2.nio;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+/**
+ * Wrapper around {@link ByteBuffer} that allows to read/write unsigned values.
+ */
 public class MultiSignByteBuffer {
 
 	public static MultiSignByteBuffer allocate(int capacity) {
