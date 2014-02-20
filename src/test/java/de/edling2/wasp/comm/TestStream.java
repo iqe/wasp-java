@@ -76,7 +76,7 @@ public class TestStream {
 
 	public static String formatBytes(byte[] bytes, int byteCount) {
 		MultiSignByteBuffer bb = MultiSignByteBuffer.wrap(bytes);
-		StringBuffer b = new StringBuffer();
+		StringBuilder b = new StringBuilder();
 		for (int i = 0; i < byteCount; i++) {
 			b.append(toHex(bb.getUnsigned())).append(" ");
 		}
