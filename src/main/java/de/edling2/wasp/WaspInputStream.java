@@ -6,7 +6,6 @@ import java.io.Closeable;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 /**
  * Low-level wrapper around an {@link InputStream}.
@@ -21,22 +20,6 @@ public class WaspInputStream implements Closeable {
 	public WaspInputStream(InputStream in) {
 		this.in = in;
 		crc = new Crc16Ccitt();
-	}
-
-	/**
-	 * Reads the next message into a new byte array.
-	 *
-	 * Messages larger than {@link #DEFAULT_BUFFER_SIZE} are not supported by
-	 * this method.
-	 *
-	 * You should therefore use {@link #readMessageIntoBuffer(byte[])} which
-	 * allows you to reuse a message buffer and define its size yourself.
-	 */
-	public byte[] readMessage() throws IOException {
-		byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
-		int byteCount = readMessageIntoBuffer(buffer);
-
-		return Arrays.copyOf(buffer, byteCount);
 	}
 
 	/**

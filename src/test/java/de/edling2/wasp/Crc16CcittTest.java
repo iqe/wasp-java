@@ -1,6 +1,5 @@
 package de.edling2.wasp;
 
-import static de.edling2.wasp.WaspStream.*;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class Crc16CcittTest {
 
 	@Before
 	public void setUp() throws Exception {
-		buffer = new byte[DEFAULT_BUFFER_SIZE];
+		buffer = new byte[32];
 		jacksum = JacksumAPI.getChecksumInstance("crc:16,1021,FFFF,false,false,0");
 		custom = new Crc16Ccitt();
 	}

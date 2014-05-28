@@ -9,11 +9,6 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.edling2.wasp.BufferSizeException;
-import de.edling2.wasp.CrcMismatchException;
-import de.edling2.wasp.CrcMissingException;
-import de.edling2.wasp.WaspInputStream;
-
 public class WaspInputStreamTest {
 
 	private TestInputStream inputStream;
@@ -24,7 +19,7 @@ public class WaspInputStreamTest {
 	public void setUp() {
 		inputStream = new TestInputStream();
 		stream = new WaspInputStream(inputStream);
-		buffer = new byte[DEFAULT_BUFFER_SIZE];
+		buffer = new byte[64];
 	}
 
 	@Test
