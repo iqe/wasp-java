@@ -1,6 +1,6 @@
-package de.edling2.wasp.comm;
+package de.edling2.wasp;
 
-import static de.edling2.wasp.comm.WaspStream.*;
+import static de.edling2.wasp.WaspStream.*;
 import static org.junit.Assert.*;
 
 import java.io.EOFException;
@@ -8,6 +8,11 @@ import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import de.edling2.wasp.BufferSizeException;
+import de.edling2.wasp.CrcMismatchException;
+import de.edling2.wasp.CrcMissingException;
+import de.edling2.wasp.WaspInputStream;
 
 public class WaspInputStreamTest {
 

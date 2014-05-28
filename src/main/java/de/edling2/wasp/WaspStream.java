@@ -1,4 +1,4 @@
-package de.edling2.wasp.comm;
+package de.edling2.wasp;
 
 public class WaspStream {
 	public static final int SFLAG = 0x5B;

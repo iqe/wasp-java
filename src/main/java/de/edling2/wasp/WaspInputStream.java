@@ -1,8 +1,8 @@
-package de.edling2.wasp.comm;
+package de.edling2.wasp;
 
-import static de.edling2.wasp.comm.WaspStream.*;
+import static de.edling2.wasp.WaspStream.*;
+
 import java.io.Closeable;
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
