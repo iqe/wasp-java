@@ -5,10 +5,6 @@ import static de.edling2.wasp.WaspStream.*;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.security.NoSuchAlgorithmException;
-
-import jonelo.jacksum.JacksumAPI;
-import jonelo.jacksum.algorithm.AbstractChecksum;
 
 /**
  * Low-level wrapper around an {@link OutputStream}.
@@ -18,16 +14,11 @@ import jonelo.jacksum.algorithm.AbstractChecksum;
  */
 public class WaspOutputStream implements Closeable {
 	private OutputStream out;
-	private AbstractChecksum crc;
+	private Crc16Ccitt crc;
 
 	public WaspOutputStream(OutputStream out) {
 		this.out = out;
-
-		try {
-			crc = JacksumAPI.getChecksumInstance(CRC_ALGORITHM);
-		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
-		}
+		crc = new Crc16Ccitt();
 	}
 
 	public void writeMessage(byte[] bytes) throws IOException {

@@ -22,6 +22,7 @@
       <groupId>jacksum</groupId>
       <artifactId>jacksum</artifactId>
       <version>1.7.0</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
