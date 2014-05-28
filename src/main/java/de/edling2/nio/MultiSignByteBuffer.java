@@ -32,6 +32,10 @@ public class MultiSignByteBuffer {
 
 	/* common methods */
 
+	public byte[] array() {
+		return buf.array();
+	}
+
 	public boolean isDirect() {
 		return buf.isDirect();
 	}
@@ -49,13 +53,27 @@ public class MultiSignByteBuffer {
 		return buf.limit();
 	}
 
+	public MultiSignByteBuffer limit(int newLimit) {
+		buf.limit(newLimit);
+		return this;
+	}
+
 	public MultiSignByteBuffer order(ByteOrder bo) {
 		buf.order(bo);
 		return this;
 	}
 
+	public int position() {
+		return buf.position();
+	}
+
 	public MultiSignByteBuffer position(int newPosition) {
 		buf.position(newPosition);
+		return this;
+	}
+
+	public MultiSignByteBuffer rewind() {
+		buf.rewind();
 		return this;
 	}
 
