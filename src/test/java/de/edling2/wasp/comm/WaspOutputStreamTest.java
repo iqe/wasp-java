@@ -32,6 +32,20 @@ public class WaspOutputStreamTest {
 	}
 
 	@Test
+	public void shouldReadFromBufferOffset() throws Exception {
+		stream.writeMessage("YZABCDEF".getBytes(), 2, 3);
+		expectMessage(SFLAG, 'A', 'B', 'C', 0x08, 0xF5, EFLAG);
+	}
+
+	@Test
+	public void shouldThrowOnInvalidArguments() throws Exception {
+		expectIllegalArgumentException("ABC", -1, 1);
+		expectIllegalArgumentException("ABC", 0, -1);
+		expectIllegalArgumentException("ABC", 0, 4);
+		expectIllegalArgumentException("ABC", 2, 2);
+	}
+
+	@Test
 	public void shouldCloseUnderlyingStream() throws Exception {
 		stream.close();
 		assertTrue(outputStream.isClosed());
@@ -71,5 +85,14 @@ public class WaspOutputStreamTest {
 
 	private void expectNoMoreMessages() throws Exception {
 		assertTrue(outputStream.read() == -1);
+	}
+
+	private void expectIllegalArgumentException(String s, int offset, int length) throws Exception {
+		try {
+			stream.writeMessage(s.getBytes(), offset, length);
+			fail ("Should have thrown IllegalArgumentException");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
 	}
 }

@@ -31,26 +31,35 @@ public class WaspOutputStream implements Closeable {
 	}
 
 	public void writeMessage(byte[] bytes) throws IOException {
+		writeMessage(bytes, 0, bytes.length);
+	}
+
+	public void writeMessage(byte[] bytes, int offset, int length) throws IOException {
 		out.write(SFLAG);
-		writeContent(bytes);
-		writeCrc(bytes);
+		writeContent(bytes, offset, length);
+		writeCrc(bytes, offset, length);
 		out.write(EFLAG);
 		out.flush();
 	}
 
-	private void writeCrc(byte[] bytes) throws IOException {
+	private void writeCrc(byte[] bytes, int offset, int length) throws IOException {
 		crc.reset();
-		crc.update(bytes);
+		crc.update(bytes, offset, length);
 
 		byte low = (byte)crc.getValue();
 		byte high = (byte)(crc.getValue() >>> 8);
 
-		writeContent(new byte[] {low, high});
+		writeContent(new byte[] {low, high}, 0, 2);
 	}
 
-	private void writeContent(byte[] bytes) throws IOException {
+	private void writeContent(byte[] bytes, int offset, int length) throws IOException {
+		if (offset < 0 || length < 0 || offset + length > bytes.length) {
+			throw new IllegalArgumentException(String.format(
+					"Invalid offset '%d' and length '%d' for byte array of length '%d'", offset, length, bytes.length));
+		}
+
 		byte b;
-		for (int i = 0; i < bytes.length; i++) {
+		for (int i = offset; i < offset + length; i++) {
 			b = bytes[i];
 
 			if (b == SFLAG || b == EFLAG || b == ESC) {
