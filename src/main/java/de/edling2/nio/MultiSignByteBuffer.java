@@ -146,11 +146,11 @@ public class MultiSignByteBuffer {
 	}
 
 	public long getUnsignedInt() {
-		return ((long) buf.getInt() & 0xFFFFFFFFL);
+		return (buf.getInt() & 0xFFFFFFFFL);
 	}
 
 	public long getUnsignedInt(int index) {
-		return ((long) buf.getInt(index) & 0xFFFFFFFFL);
+		return (buf.getInt(index) & 0xFFFFFFFFL);
 	}
 
 	public MultiSignByteBuffer putInt(int value) {
