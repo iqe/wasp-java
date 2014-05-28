@@ -14,6 +14,8 @@ import java.io.InputStream;
  * validates message checksums.
  */
 public class WaspInputStream implements Closeable {
+	private static final int CRC_SIZE = 2; // size of CRC in bytes
+
 	private InputStream in;
 	private Crc16Ccitt crc;
 
@@ -45,7 +47,7 @@ public class WaspInputStream implements Closeable {
 					checkLength(byteCount);
 					checkCrc(buffer, byteCount);
 
-					return byteCount - 2;
+					return byteCount - CRC_SIZE;
 				}
 				inMessage = false;
 				break;
@@ -73,16 +75,16 @@ public class WaspInputStream implements Closeable {
 	}
 
 	private void checkLength(int length) throws IOException {
-		if (length < 2) {
+		if (length < CRC_SIZE) {
 			throw new CrcMissingException();
 		}
 	}
 
 	private void checkCrc(byte[] buffer, int byteCount) throws IOException {
 		crc.reset();
-		crc.update(buffer, 0, byteCount - 2);
+		crc.update(buffer, 0, byteCount - CRC_SIZE);
 
-		int crcValue = readUnsignedShort(buffer, byteCount - 2);
+		int crcValue = readUnsignedShort(buffer, byteCount - CRC_SIZE);
 		if (crc.getValue() != crcValue) {
 			throw new CrcMismatchException(crc.getValue(), crcValue);
 		}
