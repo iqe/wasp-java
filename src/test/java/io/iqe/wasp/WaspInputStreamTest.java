@@ -1,7 +1,11 @@
-package de.edling2.wasp;
+package io.iqe.wasp;
 
-import static de.edling2.wasp.WaspStream.*;
+import static io.iqe.wasp.WaspStream.*;
 import static org.junit.Assert.*;
+import io.iqe.wasp.BufferSizeException;
+import io.iqe.wasp.CrcMismatchException;
+import io.iqe.wasp.CrcMissingException;
+import io.iqe.wasp.WaspInputStream;
 
 import java.io.EOFException;
 import java.util.Arrays;

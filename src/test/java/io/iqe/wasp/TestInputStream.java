@@ -1,4 +1,4 @@
-package de.edling2.wasp;
+package io.iqe.wasp;
 
 import java.io.IOException;
 import java.io.InputStream;

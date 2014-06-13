@@ -1,4 +1,4 @@
-package de.edling2.wasp;
+package io.iqe.wasp;
 
 /**
  * Implementation of CRC16 CCITT.

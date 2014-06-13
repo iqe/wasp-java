@@ -1,6 +1,7 @@
-package de.edling2.wasp;
+package io.iqe.wasp;
 
 import static org.junit.Assert.*;
+import io.iqe.wasp.Crc16Ccitt;
 
 import java.io.IOException;
 

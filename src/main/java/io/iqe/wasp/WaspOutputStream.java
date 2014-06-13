@@ -1,6 +1,6 @@
-package de.edling2.wasp;
+package io.iqe.wasp;
 
-import static de.edling2.wasp.WaspStream.*;
+import static io.iqe.wasp.WaspStream.*;
 
 import java.io.Closeable;
 import java.io.IOException;

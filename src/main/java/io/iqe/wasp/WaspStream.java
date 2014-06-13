@@ -1,4 +1,4 @@
-package de.edling2.wasp;
+package io.iqe.wasp;
 
 final class WaspStream {
 	public static final int SFLAG = 0x5B;

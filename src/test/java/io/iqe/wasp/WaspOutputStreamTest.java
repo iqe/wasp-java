@@ -1,12 +1,11 @@
-package de.edling2.wasp;
+package io.iqe.wasp;
 
-import static de.edling2.wasp.WaspStream.*;
+import static io.iqe.wasp.WaspStream.*;
 import static org.junit.Assert.*;
+import io.iqe.wasp.WaspOutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import de.edling2.wasp.WaspOutputStream;
 
 public class WaspOutputStreamTest {
 
