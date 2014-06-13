@@ -14,91 +14,92 @@ import java.io.InputStream;
  * validates message checksums.
  */
 public class WaspInputStream implements Closeable {
-	private static final int CRC_SIZE = 2; // size of CRC in bytes
+    private static final int CRC_SIZE = 2; // size of CRC in bytes
 
-	private InputStream in;
-	private Crc16Ccitt crc;
+    private InputStream in;
+    private Crc16Ccitt crc;
 
-	public WaspInputStream(InputStream in) {
-		this.in = in;
-		crc = new Crc16Ccitt();
-	}
+    public WaspInputStream(InputStream in) {
+        this.in = in;
+        crc = new Crc16Ccitt();
+    }
 
-	/**
-	 * Reads the next message into the given {@code buffer}.
-	 *
-	 * @return the size of the message payload
-	 * @throws IOException if the stream is closed before a message arrives
-	 */
-	public int readMessageIntoBuffer(byte[] buffer) throws IOException {
-		int b, byteCount = 0;
-		boolean inMessage = false, afterEsc = false;
+    /**
+     * Reads the next message into the given {@code buffer}.
+     *
+     * @return the size of the message payload
+     * @throws IOException
+     *             if the stream is closed before a message arrives
+     */
+    public int readMessageIntoBuffer(byte[] buffer) throws IOException {
+        int b, byteCount = 0;
+        boolean inMessage = false, afterEsc = false;
 
-		while ((b = in.read()) != -1) {
-			checkBufferSize(buffer, byteCount);
+        while ((b = in.read()) != -1) {
+            checkBufferSize(buffer, byteCount);
 
-			switch(b) {
-			case SFLAG:
-				inMessage = true;
-				byteCount = 0;
-				break;
-			case EFLAG:
-				if (inMessage) {
-					checkLength(byteCount);
-					checkCrc(buffer, byteCount);
+            switch (b) {
+            case SFLAG:
+                inMessage = true;
+                byteCount = 0;
+                break;
+            case EFLAG:
+                if (inMessage) {
+                    checkLength(byteCount);
+                    checkCrc(buffer, byteCount);
 
-					return byteCount - CRC_SIZE;
-				}
-				inMessage = false;
-				break;
-			case ESC:
-				afterEsc = true;
-				break;
-			default:
-				if (inMessage) {
-					if (afterEsc) {
-						b ^= ESC_XOR;
-						afterEsc = false;
-					}
-					buffer[byteCount++] = (byte)b;
-				}
-			}
-		}
+                    return byteCount - CRC_SIZE;
+                }
+                inMessage = false;
+                break;
+            case ESC:
+                afterEsc = true;
+                break;
+            default:
+                if (inMessage) {
+                    if (afterEsc) {
+                        b ^= ESC_XOR;
+                        afterEsc = false;
+                    }
+                    buffer[byteCount++] = (byte) b;
+                }
+            }
+        }
 
-		throw new EOFException("End of stream");
-	}
+        throw new EOFException("End of stream");
+    }
 
-	private void checkBufferSize(byte[] buffer, int byteCount) throws IOException {
-		if (buffer.length <= byteCount) {
-			throw new BufferSizeException(buffer.length);
-		}
-	}
+    private void checkBufferSize(byte[] buffer, int byteCount) throws IOException {
+        if (buffer.length <= byteCount) {
+            throw new BufferSizeException(buffer.length);
+        }
+    }
 
-	private void checkLength(int length) throws IOException {
-		if (length < CRC_SIZE) {
-			throw new CrcMissingException();
-		}
-	}
+    private void checkLength(int length) throws IOException {
+        if (length < CRC_SIZE) {
+            throw new CrcMissingException();
+        }
+    }
 
-	private void checkCrc(byte[] buffer, int byteCount) throws IOException {
-		crc.reset();
-		crc.update(buffer, 0, byteCount - CRC_SIZE);
+    private void checkCrc(byte[] buffer, int byteCount) throws IOException {
+        crc.reset();
+        crc.update(buffer, 0, byteCount - CRC_SIZE);
 
-		int crcValue = readUnsignedShort(buffer, byteCount - CRC_SIZE);
-		if (crc.getValue() != crcValue) {
-			throw new CrcMismatchException(crc.getValue(), crcValue);
-		}
-	}
+        int crcValue = readUnsignedShort(buffer, byteCount - CRC_SIZE);
+        if (crc.getValue() != crcValue) {
+            throw new CrcMismatchException(crc.getValue(), crcValue);
+        }
+    }
 
-	private int readUnsignedShort(byte[] buffer, int offset) {
-		byte low = buffer[offset];
-		byte high = buffer[offset + 1];
+    private int readUnsignedShort(byte[] buffer, int offset) {
+        byte low = buffer[offset];
+        byte high = buffer[offset + 1];
 
-		return ((high & 0xFF) << 8) | (low & 0xFF);
-	}
+        return ((high & 0xFF) << 8) | (low & 0xFF);
+    }
 
-	@Override
-	public void close() throws IOException {
-		in.close();
-	}
+    @Override
+    public void close() throws IOException {
+        in.close();
+    }
 }

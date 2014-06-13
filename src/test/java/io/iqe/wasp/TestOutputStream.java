@@ -6,38 +6,38 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class TestOutputStream extends OutputStream {
-	private boolean closed;
-	private Queue<Byte> bytes;
+    private boolean closed;
+    private Queue<Byte> bytes;
 
-	public TestOutputStream() {
-		this(new LinkedBlockingQueue<Byte>());
-	}
+    public TestOutputStream() {
+        this(new LinkedBlockingQueue<Byte>());
+    }
 
-	public TestOutputStream(Queue<Byte> bytes) {
-		this.bytes = bytes;
-	}
+    public TestOutputStream(Queue<Byte> bytes) {
+        this.bytes = bytes;
+    }
 
-	public int read() {
-		Byte b = bytes.poll();
-		return b == null ? -1 : b & 0xFF;
-	}
+    public int read() {
+        Byte b = bytes.poll();
+        return b == null ? -1 : b & 0xFF;
+    }
 
-	public void clear() {
-		bytes.clear();
-	}
+    public void clear() {
+        bytes.clear();
+    }
 
-	@Override
-	public void write(int b) throws IOException {
-		bytes.add((byte)b);
-	}
+    @Override
+    public void write(int b) throws IOException {
+        bytes.add((byte) b);
+    }
 
-	@Override
-	public void close() throws IOException {
-		super.close();
-		closed = true;
-	}
+    @Override
+    public void close() throws IOException {
+        super.close();
+        closed = true;
+    }
 
-	public boolean isClosed() {
-		return closed;
-	}
+    public boolean isClosed() {
+        return closed;
+    }
 }
