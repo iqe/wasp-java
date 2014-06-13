@@ -40,7 +40,7 @@ public class WaspOutputStream implements Closeable {
         byte low = (byte) crc.getValue();
         byte high = (byte) (crc.getValue() >>> 8);
 
-        writeContent(new byte[] { low, high }, 0, 2);
+        writeContent(new byte[] { low, high }, 0, CRC_SIZE);
     }
 
     private void writeContent(byte[] bytes, int offset, int length) throws IOException {

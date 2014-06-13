@@ -14,8 +14,6 @@ import java.io.InputStream;
  * validates message checksums.
  */
 public class WaspInputStream implements Closeable {
-    private static final int CRC_SIZE = 2; // size of CRC in bytes
-
     private InputStream in;
     private Crc16Ccitt crc;
 
