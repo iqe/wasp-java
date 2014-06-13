@@ -89,6 +89,13 @@ public class WaspInputStreamTest {
     }
 
     @Test
+    public void shouldAcceptMessagesUpToBufferSize() throws Exception {
+        addInput(SFLAG, 'A', 'B', 'C', 0x08, 0xF5, EFLAG);
+        useBuffer(new byte[5]);
+        expectMessage("ABC");
+    }
+
+    @Test
     public void shouldThrowBufferSizeException() throws Exception {
         addInput(SFLAG, 'A', 'B', 'C', 0x08, 0xF5, EFLAG);
         useBuffer(new byte[4]);

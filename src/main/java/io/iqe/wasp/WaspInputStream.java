@@ -36,8 +36,6 @@ public class WaspInputStream implements Closeable {
         boolean inMessage = false, afterEsc = false;
 
         while ((b = in.read()) != -1) {
-            checkBufferSize(buffer, byteCount);
-
             switch (b) {
             case SFLAG:
                 inMessage = true;
@@ -61,6 +59,8 @@ public class WaspInputStream implements Closeable {
                         b ^= ESC_XOR;
                         afterEsc = false;
                     }
+                    checkBufferSize(buffer, byteCount);
+
                     buffer[byteCount++] = (byte) b;
                 }
             }
